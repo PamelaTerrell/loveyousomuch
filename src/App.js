@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, Sparkles, MessageCircle, Send } from 'lucide-react';
+import { Analytics } from "@vercel/analytics/react"
 
 export default function ILoveYouSoMuch() {
   const [message, setMessage] = useState('');
@@ -11,6 +12,8 @@ export default function ILoveYouSoMuch() {
     "I love you so much that words feel too small to hold this feeling"
   ]);
   const [hearts, setHearts] = useState([]);
+
+ 
 
   useEffect(() => {
     const createHeart = () => {
@@ -250,6 +253,7 @@ export default function ILoveYouSoMuch() {
           .textarea:focus {
             border-color: #f472b6;
           }
+
         `}
       </style>
 
@@ -348,6 +352,7 @@ export default function ILoveYouSoMuch() {
             <Heart size={16} color="#f87171" fill="currentColor" />
           </div>
         </div>
+         < Analytics />
       </div>
     </div>
   );
