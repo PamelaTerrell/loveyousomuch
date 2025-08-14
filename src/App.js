@@ -344,14 +344,37 @@ export default function ILoveYouSoMuch() {
           </div>
         </div>
 
-        {/* Footer */}
-        <div style={styles.footer}>
-          <div style={styles.footerContent}>
-            <Heart size={16} color="#f9a8d4" fill="currentColor" />
-            <span>Made with endless love</span>
-            <Heart size={16} color="#f87171" fill="currentColor" />
-          </div>
-        </div>
+      {/* Footer */}
+<div 
+  style={{
+    ...styles.footer,
+    background: "linear-gradient(90deg, #fce7f3, #fbcfe8, #fce7f3)",
+    padding: "10px 0",
+  }}
+>
+  <div style={styles.footerContent}>
+    <Heart size={16} color="#f9a8d4" fill="currentColor" />
+    <span style={{ margin: "0 6px" }}>
+      Made with endless love by{" "}
+      <a 
+        href="https://pamelajterrell.com" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        style={{
+          color: "#ec4899",
+          textDecoration: "none",
+          fontWeight: "bold",
+        }}
+        onMouseOver={(e) => e.target.style.textDecoration = "underline"}
+        onMouseOut={(e) => e.target.style.textDecoration = "none"}
+      >
+        Pamela Terrell
+      </a>
+    </span>
+    <Heart size={16} color="#f87171" fill="currentColor" />
+  </div>
+</div>
+
          < Analytics />
       </div>
     </div>
