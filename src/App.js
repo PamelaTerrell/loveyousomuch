@@ -2,15 +2,36 @@ import React, { useState, useEffect } from 'react';
 import { Heart, Sparkles, MessageCircle, Send } from 'lucide-react';
 import { Analytics } from "@vercel/analytics/react"
 
+
+const initialMessages = [
+  "I love you so much that my heart skips a beat every time I see your name on my phone",
+  "You make ordinary moments feel like magic just by being there",
+  "I love you so much that even my dreams aren't big enough to contain it all",
+  "Every song reminds me of you, every sunset makes me wish you were here",
+  "I love you so much that words feel too small to hold this feeling",
+  "The way our bodies fit together feels like the answer to a question I didn’t even know I was asking. Every brush of skin feels like home.",
+  "When you hold me, it’s as if the whole world fades away — just the rhythm of our breathing and the warmth between us remain.",
+  "Every touch feels like a sentence in a language only we speak, telling a story we’ve been writing since the moment we met.",
+  "Lying beside you, I feel the universe slow down — as if time itself pauses to honor the way our bodies connect."
+];
+
 export default function ILoveYouSoMuch() {
+  const shuffleArray = (array) => {
+    let shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
   const [message, setMessage] = useState('');
-  const [submissions, setSubmissions] = useState([
-    "I love you so much that my heart skips a beat every time I see your name on my phone",
-    "You make ordinary moments feel like magic just by being there",
-    "I love you so much that even my dreams aren't big enough to contain it all",
-    "Every song reminds me of you, every sunset makes me wish you were here",
-    "I love you so much that words feel too small to hold this feeling"
-  ]);
+  const [submissions, setSubmissions] = useState([]);
+
+  useEffect(() => {
+    setSubmissions(shuffleArray(initialMessages));
+  }, []);
+
   const [hearts, setHearts] = useState([]);
 
  
