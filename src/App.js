@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Sparkles, MessageCircle, Send } from 'lucide-react';
-import { Analytics } from "@vercel/analytics/react"
-
+import { Heart, Sparkles, MessageCircle, Send, Share2 } from 'lucide-react';
+import { Analytics } from "@vercel/analytics/react";
 
 const initialMessages = [
   "I love you so much that my heart skips a beat every time I see your name on my phone",
@@ -15,26 +14,279 @@ const initialMessages = [
   "Lying beside you, I feel the universe slow down — as if time itself pauses to honor the way our bodies connect."
 ];
 
-export default function ILoveYouSoMuch() {
-  const shuffleArray = (array) => {
-    let shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  };
+const shuffleArray = (array) => {
+  let shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
 
+const styles = {
+  container: {
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg, #fce7f3, #fdf2f8, #fef2f2)',
+    position: 'relative',
+    overflow: 'hidden',
+    fontFamily: 'system-ui, -apple-system, sans-serif'
+  },
+  floatingHeart: {
+    position: 'absolute',
+    color: '#f9a8d4',
+    opacity: 0.6,
+    pointerEvents: 'none',
+    fontSize: '24px'
+  },
+  mainContent: {
+    maxWidth: '1200px',
+    margin: '0 auto',
+    padding: '32px 16px',
+    position: 'relative',
+    zIndex: 10
+  },
+  header: {
+    textAlign: 'center',
+    marginBottom: '40px'
+  },
+  headerIcons: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '12px',
+    marginBottom: '16px'
+  },
+  title: {
+    fontSize: '48px',
+    fontWeight: 'bold',
+    background: 'linear-gradient(to right, #dc2626, #e11d48)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    margin: 0
+  },
+  subtitle: {
+    fontSize: '18px',
+    color: '#6b7280',
+    maxWidth: '600px',
+    margin: '0 auto',
+    lineHeight: 1.6
+  },
+  subHelper: {
+    marginTop: '8px',
+    fontSize: '14px',
+    color: '#9ca3af'
+  },
+  featuredSection: {
+    maxWidth: '700px',
+    margin: '24px auto 32px auto'
+  },
+  featuredCard: {
+    background: 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(252,231,243,0.95))',
+    borderRadius: '18px',
+    padding: '20px 24px',
+    border: '1px solid #fce7f3',
+    boxShadow: '0 18px 30px -15px rgba(0,0,0,0.15)'
+  },
+  featuredLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    fontSize: '14px',
+    textTransform: 'uppercase',
+    letterSpacing: '0.08em',
+    color: '#ec4899',
+    marginBottom: '10px'
+  },
+  featuredText: {
+    margin: 0,
+    fontSize: '16px',
+    lineHeight: 1.7,
+    fontStyle: 'italic',
+    color: '#374151'
+  },
+  formSection: {
+    maxWidth: '600px',
+    margin: '0 auto 48px auto'
+  },
+  formCard: {
+    background: 'rgba(255, 255, 255, 0.9)',
+    backdropFilter: 'blur(10px)',
+    borderRadius: '16px',
+    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+    padding: '32px',
+    border: '1px solid #fce7f3'
+  },
+  sectionHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    marginBottom: '8px'
+  },
+  sectionTitle: {
+    fontSize: '24px',
+    fontWeight: '600',
+    color: '#374151',
+    margin: 0
+  },
+  sectionHint: {
+    fontSize: '14px',
+    color: '#9ca3af',
+    marginBottom: '18px'
+  },
+  textarea: {
+    width: '100%',
+    height: '120px',
+    padding: '16px',
+    border: '2px solid #fce7f3',
+    borderRadius: '12px',
+    fontSize: '16px',
+    color: '#374151',
+    background: 'rgba(252, 231, 243, 0.3)',
+    resize: 'none',
+    outline: 'none',
+    fontFamily: 'inherit',
+    marginBottom: '16px'
+  },
+  formFooter: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: '12px',
+    flexWrap: 'wrap'
+  },
+  charCount: {
+    fontSize: '14px',
+    color: '#6b7280'
+  },
+  submitButton: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    background: 'linear-gradient(to right, #ec4899, #ef4444)',
+    color: 'white',
+    padding: '12px 24px',
+    borderRadius: '12px',
+    border: 'none',
+    fontSize: '16px',
+    fontWeight: '500',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease'
+  },
+  submitButtonDisabled: {
+    opacity: 0.5,
+    cursor: 'not-allowed'
+  },
+  shareRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    fontSize: '13px',
+    color: '#9ca3af',
+    marginTop: '10px'
+  },
+  shareLink: {
+    border: 'none',
+    background: 'transparent',
+    color: '#ec4899',
+    cursor: 'pointer',
+    fontSize: '13px',
+    textDecoration: 'underline',
+    padding: 0
+  },
+  messagesSection: {
+    maxWidth: '1000px',
+    margin: '0 auto'
+  },
+  messagesHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    justifyContent: 'center',
+    marginBottom: '32px'
+  },
+  messagesGrid: {
+    display: 'grid',
+    gap: '24px',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))'
+  },
+  messageCard: {
+    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(252, 231, 243, 0.9))',
+    backdropFilter: 'blur(10px)',
+    borderRadius: '16px',
+    padding: '24px',
+    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+    border: '1px solid #fce7f3',
+    transition: 'all 0.3s ease',
+    cursor: 'pointer'
+  },
+  messageContent: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '12px'
+  },
+  messageText: {
+    color: '#374151',
+    lineHeight: 1.6,
+    fontStyle: 'italic',
+    margin: 0
+  },
+  messageFooter: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: '16px',
+    gap: '4px'
+  },
+  footer: {
+    textAlign: 'center',
+    marginTop: '64px',
+    paddingBottom: '32px'
+  },
+  footerContent: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '8px',
+    color: '#6b7280'
+  },
+  pulseHeart: {
+    animation: 'pulse 2s ease-in-out infinite'
+  },
+  toast: {
+    position: 'fixed',
+    bottom: '24px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    background: 'rgba(24, 24, 27, 0.9)',
+    color: 'white',
+    padding: '10px 18px',
+    borderRadius: '999px',
+    fontSize: '14px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    boxShadow: '0 20px 30px -20px rgba(0,0,0,0.8)',
+    zIndex: 50
+  },
+  statText: {
+    marginTop: '10px',
+    fontSize: '13px',
+    color: '#9ca3af'
+  }
+};
+
+export default function ILoveYouSoMuch() {
   const [message, setMessage] = useState('');
   const [submissions, setSubmissions] = useState([]);
+  const [hearts, setHearts] = useState([]);
+  const [featuredMessage, setFeaturedMessage] = useState('');
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
-    setSubmissions(shuffleArray(initialMessages));
+    const shuffled = shuffleArray(initialMessages);
+    setSubmissions(shuffled);
+    setFeaturedMessage(shuffled[0]);
   }, []);
-
-  const [hearts, setHearts] = useState([]);
-
- 
 
   useEffect(() => {
     const createHeart = () => {
@@ -52,185 +304,26 @@ export default function ILoveYouSoMuch() {
 
   const handleSubmit = () => {
     if (message.trim()) {
-      setSubmissions(prev => [message, ...prev]);
+      setSubmissions(prev => [message.trim(), ...prev]);
       setMessage('');
+
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 2500);
     }
   };
 
-  const styles = {
-    container: {
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #fce7f3, #fdf2f8, #fef2f2)',
-      position: 'relative',
-      overflow: 'hidden',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
-    },
-    floatingHeart: {
-      position: 'absolute',
-      color: '#f9a8d4',
-      opacity: 0.6,
-      pointerEvents: 'none',
-      fontSize: '24px'
-    },
-    mainContent: {
-      maxWidth: '1200px',
-      margin: '0 auto',
-      padding: '32px 16px',
-      position: 'relative',
-      zIndex: 10
-    },
-    header: {
-      textAlign: 'center',
-      marginBottom: '48px'
-    },
-    headerIcons: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      gap: '12px',
-      marginBottom: '16px'
-    },
-    title: {
-      fontSize: '48px',
-      fontWeight: 'bold',
-      background: 'linear-gradient(to right, #dc2626, #e11d48)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text',
-      margin: 0
-    },
-    subtitle: {
-      fontSize: '18px',
-      color: '#6b7280',
-      maxWidth: '600px',
-      margin: '0 auto',
-      lineHeight: 1.6
-    },
-    formSection: {
-      maxWidth: '600px',
-      margin: '0 auto 48px auto'
-    },
-    formCard: {
-      background: 'rgba(255, 255, 255, 0.9)',
-      backdropFilter: 'blur(10px)',
-      borderRadius: '16px',
-      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-      padding: '32px',
-      border: '1px solid #fce7f3'
-    },
-    sectionHeader: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '12px',
-      marginBottom: '24px'
-    },
-    sectionTitle: {
-      fontSize: '24px',
-      fontWeight: '600',
-      color: '#374151',
-      margin: 0
-    },
-    textarea: {
-      width: '100%',
-      height: '120px',
-      padding: '16px',
-      border: '2px solid #fce7f3',
-      borderRadius: '12px',
-      fontSize: '16px',
-      color: '#374151',
-      background: 'rgba(252, 231, 243, 0.3)',
-      resize: 'none',
-      outline: 'none',
-      fontFamily: 'inherit',
-      marginBottom: '16px'
-    },
-    textareaFocus: {
-      borderColor: '#f472b6'
-    },
-    formFooter: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center'
-    },
-    charCount: {
-      fontSize: '14px',
-      color: '#6b7280'
-    },
-    submitButton: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      background: 'linear-gradient(to right, #ec4899, #ef4444)',
-      color: 'white',
-      padding: '12px 24px',
-      borderRadius: '12px',
-      border: 'none',
-      fontSize: '16px',
-      fontWeight: '500',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease'
-    },
-    submitButtonDisabled: {
-      opacity: 0.5,
-      cursor: 'not-allowed'
-    },
-    messagesSection: {
-      maxWidth: '1000px',
-      margin: '0 auto'
-    },
-    messagesHeader: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '12px',
-      justifyContent: 'center',
-      marginBottom: '32px'
-    },
-    messagesGrid: {
-      display: 'grid',
-      gap: '24px',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))'
-    },
-    messageCard: {
-      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(252, 231, 243, 0.9))',
-      backdropFilter: 'blur(10px)',
-      borderRadius: '16px',
-      padding: '24px',
-      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-      border: '1px solid #fce7f3',
-      transition: 'all 0.3s ease',
-      cursor: 'pointer'
-    },
-    messageContent: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      gap: '12px'
-    },
-    messageText: {
-      color: '#374151',
-      lineHeight: 1.6,
-      fontStyle: 'italic',
-      margin: 0
-    },
-    messageFooter: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      marginTop: '16px',
-      gap: '4px'
-    },
-    footer: {
-      textAlign: 'center',
-      marginTop: '64px',
-      paddingBottom: '32px'
-    },
-    footerContent: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      gap: '8px',
-      color: '#6b7280'
-    },
-    pulseHeart: {
-      animation: 'pulse 2s ease-in-out infinite'
+  const handleShare = () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      navigator.share({
+        title: 'I Love You So Much',
+        text: 'I just wrote a love note on this little corner of the internet 💌',
+        url
+      }).catch(() => {});
+    } else {
+      navigator.clipboard?.writeText(url).catch(() => {});
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 2500);
     }
   };
 
@@ -275,6 +368,11 @@ export default function ILoveYouSoMuch() {
             border-color: #f472b6;
           }
 
+          @media (max-width: 640px) {
+            h1 {
+              font-size: 32px !important;
+            }
+          }
         `}
       </style>
 
@@ -302,9 +400,25 @@ export default function ILoveYouSoMuch() {
             <Heart size={48} color="#ec4899" fill="currentColor" style={styles.pulseHeart} />
           </div>
           <p style={styles.subtitle}>
-            A place to express the overwhelming, beautiful, indescribable feeling of loving someone with your whole heart
+            A little corner of the internet to pour your heart out to the person who means everything.
+          </p>
+          <p style={styles.subHelper}>
+            Write a love note they’d reread a hundred times, then share this page with them.
           </p>
         </div>
+
+        {/* Featured Love Note */}
+        {featuredMessage && (
+          <section style={styles.featuredSection}>
+            <div style={styles.featuredCard}>
+              <div style={styles.featuredLabel}>
+                <Sparkles size={16} />
+                <span>Love note of the moment</span>
+              </div>
+              <p style={styles.featuredText}>"{featuredMessage}"</p>
+            </div>
+          </section>
+        )}
 
         {/* Share Your Love Form */}
         <div style={styles.formSection}>
@@ -313,11 +427,18 @@ export default function ILoveYouSoMuch() {
               <Sparkles size={24} color="#ec4899" />
               <h2 style={styles.sectionTitle}>Share Your Love</h2>
             </div>
+            <p style={styles.sectionHint}>
+              Stuck? Start with “I knew I loved you when…” or “If I could tell you one thing right now…”
+            </p>
             <div>
+              <label htmlFor="love-message" style={{ display: 'none' }}>
+                Love message
+              </label>
               <textarea
+                id="love-message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="How much do you love them? Share your heart..."
+                placeholder="How much do you love them? Write a message they'd want to read over and over..."
                 style={styles.textarea}
                 className="textarea"
                 maxLength={500}
@@ -337,6 +458,16 @@ export default function ILoveYouSoMuch() {
                   Send Love
                 </button>
               </div>
+              <div style={styles.shareRow}>
+                <Share2 size={14} />
+                <span>Want them to see this place?</span>
+                <button type="button" style={styles.shareLink} onClick={handleShare}>
+                  Share this page
+                </button>
+              </div>
+              <p style={styles.statText}>
+                💌 {submissions.length} love notes have been shared here so far.
+              </p>
             </div>
           </div>
         </div>
@@ -352,7 +483,12 @@ export default function ILoveYouSoMuch() {
             {submissions.map((submission, index) => (
               <div key={index} style={styles.messageCard} className="message-card">
                 <div style={styles.messageContent}>
-                  <Heart size={20} color="#f87171" fill="currentColor" style={{marginTop: '2px', flexShrink: 0}} />
+                  <Heart
+                    size={20}
+                    color="#f87171"
+                    fill="currentColor"
+                    style={{ marginTop: '2px', flexShrink: 0 }}
+                  />
                   <p style={styles.messageText}>"{submission}"</p>
                 </div>
                 <div style={styles.messageFooter}>
@@ -365,39 +501,46 @@ export default function ILoveYouSoMuch() {
           </div>
         </div>
 
-      {/* Footer */}
-<div 
-  style={{
-    ...styles.footer,
-    background: "linear-gradient(90deg, #fce7f3, #fbcfe8, #fce7f3)",
-    padding: "10px 0",
-  }}
->
-  <div style={styles.footerContent}>
-    <Heart size={16} color="#f9a8d4" fill="currentColor" />
-    <span style={{ margin: "0 6px" }}>
-      Made with endless love by{" "}
-      <a 
-        href="https://pamelajterrell.com" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        style={{
-          color: "#ec4899",
-          textDecoration: "none",
-          fontWeight: "bold",
-        }}
-        onMouseOver={(e) => e.target.style.textDecoration = "underline"}
-        onMouseOut={(e) => e.target.style.textDecoration = "none"}
-      >
-        Pamela Terrell
-      </a>
-    </span>
-    <Heart size={16} color="#f87171" fill="currentColor" />
-  </div>
-</div>
+        {/* Footer */}
+        <div 
+          style={{
+            ...styles.footer,
+            background: "linear-gradient(90deg, #fce7f3, #fbcfe8, #fce7f3)",
+            padding: "10px 0",
+          }}
+        >
+          <div style={styles.footerContent}>
+            <Heart size={16} color="#f9a8d4" fill="currentColor" />
+            <span style={{ margin: "0 6px" }}>
+              Made with endless love by{" "}
+              <a 
+                href="https://pamelajterrell.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                style={{
+                  color: "#ec4899",
+                  textDecoration: "none",
+                  fontWeight: "bold",
+                }}
+                onMouseOver={(e) => e.target.style.textDecoration = "underline"}
+                onMouseOut={(e) => e.target.style.textDecoration = "none"}
+              >
+                Pamela Terrell
+              </a>
+            </span>
+            <Heart size={16} color="#f87171" fill="currentColor" />
+          </div>
+        </div>
 
-         < Analytics />
+        <Analytics />
       </div>
+
+      {showToast && (
+        <div style={styles.toast}>
+          <Heart size={14} fill="currentColor" />
+          <span>Your love note has joined the wall 💌</span>
+        </div>
+      )}
     </div>
   );
 }
