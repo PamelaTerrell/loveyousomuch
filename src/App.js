@@ -914,21 +914,35 @@ function App() {
       </main>
 
       <footer className="siteFooter">
-        <Heart size={14} fill="currentColor" />
+  <Heart size={14} fill="currentColor" />
 
-        <p>
-          Made with love by{" "}
-          <a
-            href="https://pamelajterrell.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Pamela Terrell
-          </a>
-        </p>
+  <div className="footerText">
+    <p>
+      I Love You So Much is a digital project from{" "}
+      <a
+        href="https://www.stabileusa.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Stabile USA
+      </a>{" "}
+      — independent ideas built around human connection.
+    </p>
 
-        <Heart size={14} fill="currentColor" />
-      </footer>
+    <p>
+      Created by{" "}
+      <a
+        href="https://pamelajterrell.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Pamela Terrell
+      </a>.
+    </p>
+  </div>
+
+  <Heart size={14} fill="currentColor" />
+</footer>
 
       <Analytics />
     </div>

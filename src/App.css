@@ -941,6 +941,18 @@ svg {
   text-decoration: underline;
 }
 
+.footerText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+
+  text-align: center;
+}
+
+.footerText p {
+  margin: 0;
+}
+
 /* =========================================================
    Responsive
    ========================================================= */
