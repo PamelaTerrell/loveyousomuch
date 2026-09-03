@@ -8,6 +8,7 @@ import {
 import { Analytics } from "@vercel/analytics/react";
 import { supabase } from "./lib/supabase";
 import "./App.css";
+import Admin from "./Admin";
 
 const MAX_MESSAGE_LENGTH = 500;
 
@@ -949,4 +950,12 @@ function App() {
   );
 }
 
-export default App;
+function RootApp() {
+  if (window.location.pathname === "/admin") {
+    return <Admin />;
+  }
+
+  return <App />;
+}
+
+export default RootApp;

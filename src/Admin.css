@@ -1,0 +1,447 @@
+.adminPage {
+  min-height: 100vh;
+  padding: 3rem 1rem;
+
+  background:
+    radial-gradient(
+      circle at 15% 0%,
+      rgba(245, 207, 215, 0.55),
+      transparent 28rem
+    ),
+    #fffaf8;
+
+  color: #3e2c31;
+}
+
+.adminLoginCard {
+  width: min(540px, 100%);
+  margin: 5rem auto;
+  padding: clamp(2rem, 6vw, 3.5rem);
+
+  border: 1px solid #efdee2;
+  border-radius: 28px;
+
+  background: rgba(255, 255, 255, 0.95);
+
+  box-shadow:
+    0 18px 50px rgba(111, 66, 78, 0.09);
+
+  text-align: center;
+}
+
+.adminHeart {
+  width: 50px;
+  height: 50px;
+
+  margin: 0 auto 1.25rem;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: #fff2f3;
+  color: #ad4f67;
+}
+
+.adminEyebrow {
+  margin: 0 0 0.55rem;
+
+  color: #ad4f67;
+
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.adminLoginCard h1,
+.adminHeader h1,
+.adminQueueHeading h2 {
+  margin: 0;
+
+  font-family: Georgia, serif;
+  font-weight: 500;
+
+  color: #3e2c31;
+}
+
+.adminLoginCard h1 {
+  font-size: clamp(2rem, 6vw, 3rem);
+}
+
+.adminIntroduction {
+  color: #745e64;
+}
+
+.adminLoginForm {
+  margin-top: 2rem;
+
+  text-align: left;
+}
+
+.adminLoginForm label {
+  display: block;
+
+  margin-bottom: 0.5rem;
+
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.adminEmailField {
+  min-height: 50px;
+  padding: 0 0.9rem;
+
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+
+  border: 1px solid #e4cbd1;
+  border-radius: 10px;
+
+  background: #fffdfa;
+}
+
+.adminEmailField svg {
+  color: #ad4f67;
+}
+
+.adminEmailField input {
+  flex: 1;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+  color: #3e2c31;
+}
+
+.adminPrimaryButton,
+.adminSecondaryButton,
+.approveButton,
+.rejectButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+
+  border-radius: 999px;
+
+  font-weight: 750;
+}
+
+.adminPrimaryButton {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.85rem 1.1rem;
+
+  border: 0;
+
+  background: #ad4f67;
+  color: white;
+}
+
+.adminPrimaryButton:hover {
+  background: #85384d;
+}
+
+.adminPrimaryButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.adminSecondaryButton {
+  padding: 0.65rem 0.9rem;
+
+  border: 1px solid #e4cbd1;
+
+  background: white;
+  color: #745e64;
+}
+
+.adminStatus {
+  margin: 1.2rem 0 0;
+  padding: 0.9rem 1rem;
+
+  border: 1px solid #efdee2;
+  border-radius: 10px;
+
+  background: #fff7f6;
+  color: #85384d;
+
+  font-size: 0.85rem;
+}
+
+.adminBackLink,
+.adminWallLink {
+  color: #85384d;
+
+  font-size: 0.82rem;
+  font-weight: 700;
+
+  text-decoration: none;
+}
+
+.adminBackLink {
+  display: inline-block;
+  margin-top: 1.5rem;
+}
+
+.adminBackLink:hover,
+.adminWallLink:hover {
+  text-decoration: underline;
+}
+
+.adminLoading {
+  width: min(500px, 100%);
+  margin: 8rem auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+
+  color: #85384d;
+}
+
+.adminLoading svg {
+  color: #ad4f67;
+}
+
+.adminHeader {
+  width: min(1160px, 100%);
+  margin: 0 auto 3rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.adminHeader h1 {
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+}
+
+.adminHeader p:last-child {
+  margin-bottom: 0;
+
+  color: #745e64;
+}
+
+.adminHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.adminIconButton {
+  width: 40px;
+  height: 40px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid #e4cbd1;
+  border-radius: 50%;
+
+  background: white;
+  color: #85384d;
+}
+
+.adminContent {
+  width: min(1160px, 100%);
+  margin: 0 auto;
+}
+
+.adminQueueHeading {
+  margin-bottom: 1.5rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 2rem;
+}
+
+.adminQueueHeading h2 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+}
+
+.pendingCount {
+  min-width: 44px;
+  height: 44px;
+  padding: 0 0.7rem;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 999px;
+
+  background: #ad4f67;
+  color: white;
+
+  font-weight: 800;
+}
+
+.adminEmptyState {
+  padding: 4rem 2rem;
+
+  border: 1px solid #efdee2;
+  border-radius: 24px;
+
+  background: rgba(255, 255, 255, 0.85);
+
+  color: #745e64;
+
+  text-align: center;
+}
+
+.adminEmptyState svg {
+  margin: 0 auto 1rem;
+
+  color: #ad4f67;
+}
+
+.adminEmptyState h3 {
+  margin: 0;
+
+  color: #3e2c31;
+
+  font-family: Georgia, serif;
+  font-size: 1.5rem;
+}
+
+.moderationGrid {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit, minmax(310px, 1fr));
+  gap: 1rem;
+}
+
+.moderationCard {
+  min-height: 340px;
+  padding: 1.5rem;
+
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid #efdee2;
+  border-radius: 18px;
+
+  background: white;
+
+  box-shadow:
+    0 10px 30px rgba(111, 66, 78, 0.07);
+}
+
+.moderationCardTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+
+  margin-bottom: 1.2rem;
+}
+
+.moderationCategory,
+.moderationDate {
+  color: #9b858a;
+
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.moderationRecipient {
+  margin: 0 0 0.8rem;
+
+  color: #ad4f67;
+
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.moderationCard blockquote {
+  margin: 0;
+
+  color: #3e2c31;
+
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+  line-height: 1.65;
+}
+
+.moderationAuthor {
+  margin: auto 0 1.2rem;
+
+  color: #9b858a;
+
+  font-size: 0.82rem;
+}
+
+.moderationActions {
+  padding-top: 1rem;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+
+  border-top: 1px solid #efdee2;
+}
+
+.approveButton,
+.rejectButton {
+  padding: 0.7rem 0.8rem;
+}
+
+.approveButton {
+  border: 0;
+
+  background: #ad4f67;
+  color: white;
+}
+
+.approveButton:hover {
+  background: #85384d;
+}
+
+.rejectButton {
+  border: 1px solid #e4cbd1;
+
+  background: white;
+  color: #745e64;
+}
+
+.adminWallLink {
+  margin: 2rem 0;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.adminWallLink svg {
+  color: #ad4f67;
+}
+
+@media (max-width: 700px) {
+  .adminPage {
+    padding: 2rem 1rem;
+  }
+
+  .adminHeader,
+  .adminQueueHeading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .adminHeaderActions {
+    width: 100%;
+  }
+
+  .moderationGrid {
+    grid-template-columns: 1fr;
+  }
+}
