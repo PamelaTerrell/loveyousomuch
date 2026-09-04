@@ -4,6 +4,7 @@ import {
   Copy,
   Heart,
   LockKeyhole,
+  MessageCircle,
   Send,
   Share2,
   Sparkles,
@@ -140,7 +141,7 @@ function PrivateLoveNote() {
     }
 
     const link =
-  `https://www.iloveyousomuch.love/love/${data}`;
+  `https://www.iloveyousomuch.love/open/${data}`;
 
     setCreatedLink(link);
 
@@ -175,36 +176,66 @@ function PrivateLoveNote() {
   };
 
   const sharePrivateNote = async () => {
-  if (!createdLink) {
-    return;
-  }
-
-  try {
-    if (navigator.share) {
-      await navigator.share({
-        title: "A private love note for you",
-        text: `Someone made you a private love note 💗\n\n${createdLink}`,
-      });
-
+    if (!createdLink) {
       return;
     }
 
-    await navigator.clipboard.writeText(createdLink);
+    const shareText =
+      `💗 Someone made you a private love note\n\n` +
+      `Open your surprise here:\n${createdLink}`;
 
-    setCopied(true);
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: "A private love note for you",
+          text: shareText,
+        });
 
-    window.setTimeout(() => {
-      setCopied(false);
-    }, 2500);
-  } catch (error) {
-    if (error?.name !== "AbortError") {
-      console.error(
-        "Unable to share private note:",
-        error
+        return;
+      }
+
+      await navigator.clipboard.writeText(
+        shareText
       );
+
+      setCopied(true);
+
+      window.setTimeout(() => {
+        setCopied(false);
+      }, 2500);
+    } catch (error) {
+      if (error?.name !== "AbortError") {
+        console.error(
+          "Unable to share private note:",
+          error
+        );
+      }
     }
-  }
-};
+  };
+
+  const textPrivateNote = () => {
+    if (!createdLink) {
+      return;
+    }
+
+    const textMessage =
+      `💗 Someone made you a private love note\n\n` +
+      `Open your surprise here:\n${createdLink}`;
+
+    const encodedMessage =
+      encodeURIComponent(textMessage);
+
+    const isAppleDevice =
+      /iPad|iPhone|iPod/.test(
+        navigator.userAgent
+      );
+
+    const separator =
+      isAppleDevice ? "&" : "?";
+
+    window.location.href =
+      `sms:${separator}body=${encodedMessage}`;
+  };
 
   if (isRevealPage) {
     return (
@@ -446,12 +477,12 @@ function PrivateLoveNote() {
             </p>
 
             <h2>
-              Send this link to someone you love.
+              Send this to someone you love.
             </h2>
 
             <p>
-              When they open it, they&apos;ll see
-              their private note.
+              They&apos;ll be able to tap the link
+              and open their private note.
             </p>
 
             <div className="privateShareLink">
@@ -482,8 +513,25 @@ function PrivateLoveNote() {
                   <Share2 size={17} />
                   Share
                 </button>
+
+                <button
+                  type="button"
+                  onClick={textPrivateNote}
+                  aria-label="Send private love note by text message"
+                >
+                  <MessageCircle size={17} />
+                  Text It
+                </button>
               </div>
             </div>
+
+            <p className="privateShareHint">
+              For the sweetest experience, use
+              <strong> Text It </strong>
+              or
+              <strong> Share </strong>
+              so the recipient gets a tappable message.
+            </p>
 
             <a
               className="privatePreviewLink"

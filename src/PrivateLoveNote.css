@@ -322,6 +322,65 @@
   background: #85384d;
 }
 
+.privateShareActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.privateShareActions button {
+  min-height: 40px;
+  padding: 0 0.85rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: #ad4f67;
+  color: white;
+
+  cursor: pointer;
+
+  font-weight: 750;
+
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.privateShareActions button:hover {
+  background: #85384d;
+  transform: translateY(-1px);
+}
+
+.privateShareHint {
+  max-width: 520px;
+  margin: 0 auto 1rem;
+
+  color: #9b858a;
+
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
+.privateShareHint strong {
+  color: #745e64;
+}
+
+@media (max-width: 600px) {
+  .privateShareActions {
+    width: 100%;
+  }
+
+  .privateShareActions button {
+    flex: 1 1 100%;
+  }
+}
+
 @media (max-width: 600px) {
   .privateShareActions {
     width: 100%;

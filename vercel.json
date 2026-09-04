@@ -11,6 +11,10 @@
     {
       "source": "/love/:path*",
       "destination": "/"
+    },
+    {
+      "source": "/open/:token",
+      "destination": "/api/love-preview?token=:token"
     }
   ]
 }
