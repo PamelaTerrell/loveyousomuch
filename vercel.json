@@ -3,6 +3,14 @@
     {
       "source": "/admin",
       "destination": "/"
+    },
+    {
+      "source": "/private",
+      "destination": "/"
+    },
+    {
+      "source": "/love/:path*",
+      "destination": "/"
     }
   ]
 }

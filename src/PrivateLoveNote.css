@@ -1,0 +1,485 @@
+.privateLovePage {
+  min-height: 100vh;
+
+  padding: clamp(2rem, 7vw, 5rem) 1rem;
+
+  display: grid;
+  place-items: center;
+
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(241, 207, 214, 0.35),
+      transparent 35%
+    ),
+    #fffaf8;
+
+  color: #3e2c31;
+}
+
+.privateComposer,
+.privateReveal {
+  width: min(760px, 100%);
+
+  text-align: center;
+}
+
+.privateHeartCluster {
+  margin-bottom: 1.25rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem;
+
+  color: #ad4f67;
+}
+
+.privateHeartCluster svg:first-child,
+.privateHeartCluster svg:last-child {
+  opacity: 0.55;
+}
+
+.privateEyebrow {
+  margin: 0 0 0.75rem;
+
+  color: #ad4f67;
+
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.privateComposer h1,
+.privateReveal h1 {
+  max-width: 700px;
+  margin: 0 auto;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: clamp(2.4rem, 7vw, 4.6rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+
+  color: #3e2c31;
+}
+
+.privateIntroduction,
+.privateRevealIntro {
+  max-width: 590px;
+  margin: 1.2rem auto 2rem;
+
+  color: #745e64;
+
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.privateLoveForm {
+  width: min(650px, 100%);
+  margin: 2.3rem auto 0;
+  padding: clamp(1.4rem, 5vw, 2.4rem);
+
+  text-align: left;
+
+  border: 1px solid #efdee2;
+  border-radius: 28px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 18px 50px rgba(111, 66, 78, 0.08);
+}
+
+.privateFormField {
+  margin-bottom: 1.3rem;
+}
+
+.privateFormField label {
+  margin-bottom: 0.5rem;
+
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+
+  color: #3e2c31;
+
+  font-size: 0.86rem;
+  font-weight: 750;
+}
+
+.privateOptional {
+  color: #9b858a;
+
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.privateFormField input,
+.privateFormField textarea {
+  width: 100%;
+
+  padding: 0.95rem 1rem;
+
+  border: 1px solid #e4cbd1;
+  border-radius: 13px;
+
+  outline: none;
+
+  background: #fffdfa;
+  color: #3e2c31;
+
+  font: inherit;
+}
+
+.privateFormField textarea {
+  min-height: 165px;
+  resize: vertical;
+}
+
+.privateFormField input:focus,
+.privateFormField textarea:focus {
+  border-color: #ad4f67;
+
+  box-shadow:
+    0 0 0 3px rgba(173, 79, 103, 0.09);
+}
+
+.privateCharacterCounter {
+  margin-top: 0.45rem;
+
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+
+  color: #9b858a;
+
+  font-size: 0.72rem;
+}
+
+.privatePrivacyNotice {
+  margin: 1.3rem 0;
+
+  padding: 1rem;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+
+  border-radius: 14px;
+
+  background: #fff7f6;
+  color: #745e64;
+}
+
+.privatePrivacyNotice svg {
+  flex: 0 0 auto;
+
+  margin-top: 0.15rem;
+
+  color: #ad4f67;
+}
+
+.privatePrivacyNotice p {
+  margin: 0;
+
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.privatePrimaryButton,
+.privateSecondaryButton {
+  min-height: 44px;
+  padding: 0.8rem 1.15rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  border-radius: 999px;
+
+  font-weight: 750;
+
+  text-decoration: none;
+}
+
+.privatePrimaryButton {
+  width: 100%;
+
+  border: 0;
+
+  background: #ad4f67;
+  color: white;
+}
+
+.privatePrimaryButton:hover:not(:disabled) {
+  background: #85384d;
+}
+
+.privatePrimaryButton:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.privateSecondaryButton {
+  border: 1px solid #e4cbd1;
+
+  background: white;
+  color: #745e64;
+}
+
+.privateStatus {
+  margin: 1rem 0 0;
+
+  text-align: center;
+
+  color: #85384d;
+}
+
+.privateLinkCard {
+  width: min(650px, 100%);
+  margin: 2.2rem auto 0;
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+
+  border: 1px solid #efdee2;
+  border-radius: 28px;
+
+  background: white;
+
+  box-shadow:
+    0 18px 50px rgba(111, 66, 78, 0.08);
+}
+
+.privateLinkHeart {
+  margin: 0 auto 1rem;
+
+  color: #ad4f67;
+}
+
+.privateLinkCard h2 {
+  margin: 0 0 0.7rem;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: clamp(1.8rem, 5vw, 2.7rem);
+  font-weight: 500;
+}
+
+.privateLinkCard > p {
+  color: #745e64;
+}
+
+.privateShareLink {
+  margin: 1.5rem 0;
+
+  padding: 0.55rem;
+
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  border: 1px solid #efdee2;
+  border-radius: 13px;
+
+  background: #fffaf8;
+}
+
+.privateShareLink span {
+  min-width: 0;
+  flex: 1;
+
+  padding: 0 0.45rem;
+
+  overflow: hidden;
+
+  color: #745e64;
+
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.privateShareLink button {
+  min-height: 38px;
+  padding: 0 0.8rem;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: #ad4f67;
+  color: white;
+
+  font-weight: 750;
+}
+
+.privatePreviewLink {
+  display: block;
+
+  margin-bottom: 1rem;
+
+  color: #ad4f67;
+
+  font-size: 0.85rem;
+  font-weight: 750;
+}
+
+.privateBackLink {
+  display: inline-block;
+
+  margin-top: 2rem;
+
+  color: #745e64;
+
+  font-size: 0.82rem;
+  text-decoration: none;
+}
+
+.privateNoteCard {
+  position: relative;
+
+  width: min(650px, 100%);
+  margin: 2.5rem auto 1.5rem;
+  padding: clamp(2rem, 7vw, 3.5rem);
+
+  overflow: hidden;
+
+  border: 1px solid #efdee2;
+  border-radius: 30px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #fff7f6
+    );
+
+  box-shadow:
+    0 20px 60px rgba(111, 66, 78, 0.1);
+}
+
+.privateSparkle {
+  position: absolute;
+  top: 1.3rem;
+  right: 1.3rem;
+
+  color: #ad4f67;
+
+  opacity: 0.65;
+}
+
+.privateRecipient {
+  margin: 0 0 1.2rem;
+
+  color: #ad4f67;
+
+  font-size: 0.77rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.privateNoteCard blockquote {
+  margin: 0;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: clamp(1.35rem, 4vw, 2rem);
+  line-height: 1.6;
+
+  color: #3e2c31;
+}
+
+.privateAuthor {
+  margin: 1.4rem 0 0;
+
+  color: #745e64;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+}
+
+.privatePrivacyMessage {
+  margin: 0 auto 1.5rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+
+  color: #9b858a;
+
+  font-size: 0.75rem;
+}
+
+.privateLoading,
+.privateError {
+  padding: 3rem 1rem;
+
+  color: #745e64;
+}
+
+.privateLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.privateLoading svg {
+  color: #ad4f67;
+}
+
+.privateError h1 {
+  margin-top: 1rem;
+
+  font-size: clamp(2rem, 6vw, 3rem);
+}
+
+.privateError p {
+  margin: 1rem auto 1.5rem;
+
+  color: #745e64;
+}
+
+@media (max-width: 600px) {
+  .privateCharacterCounter {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .privateShareLink {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .privateShareLink span {
+    padding: 0.5rem;
+
+    white-space: normal;
+    word-break: break-all;
+  }
+
+  .privateShareLink button {
+    justify-content: center;
+  }
+}

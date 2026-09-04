@@ -5,7 +5,9 @@ import {
   Send,
   Shuffle,
   Sparkles,
+  LockKeyhole,
 } from "lucide-react";
+import PrivateLoveNote from "./PrivateLoveNote";
 import { Analytics } from "@vercel/analytics/react";
 import { supabase } from "./lib/supabase";
 import Admin from "./Admin";
@@ -604,6 +606,14 @@ function App() {
           Leave a little love
           <Heart size={16} fill="currentColor" />
         </a>
+
+        <a
+  className="secondaryAction"
+  href="/private"
+>
+  <LockKeyhole size={16} />
+  Send a private note
+</a>
       </header>
 
       <main>
@@ -1299,8 +1309,17 @@ function App() {
 }
 
 function RootApp() {
-  if (window.location.pathname === "/admin") {
+  const pathname = window.location.pathname;
+
+  if (pathname === "/admin") {
     return <Admin />;
+  }
+
+  if (
+    pathname === "/private" ||
+    pathname.startsWith("/love/")
+  ) {
+    return <PrivateLoveNote />;
   }
 
   return <App />;
