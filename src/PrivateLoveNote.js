@@ -140,7 +140,7 @@ function PrivateLoveNote() {
     }
 
     const link =
-      `${window.location.origin}/love/${data}`;
+  `https://www.iloveyousomuch.love/love/${data}`;
 
     setCreatedLink(link);
 
@@ -175,40 +175,36 @@ function PrivateLoveNote() {
   };
 
   const sharePrivateNote = async () => {
-    if (!createdLink) {
+  if (!createdLink) {
+    return;
+  }
+
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: "A private love note for you",
+        text: `Someone made you a private love note 💗\n\n${createdLink}`,
+      });
+
       return;
     }
 
-    const shareData = {
-      title: "A private love note for you",
-      text: "Someone made you a private love note 💗",
-      url: createdLink,
-    };
+    await navigator.clipboard.writeText(createdLink);
 
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-        return;
-      }
+    setCopied(true);
 
-      await navigator.clipboard.writeText(
-        createdLink
+    window.setTimeout(() => {
+      setCopied(false);
+    }, 2500);
+  } catch (error) {
+    if (error?.name !== "AbortError") {
+      console.error(
+        "Unable to share private note:",
+        error
       );
-
-      setCopied(true);
-
-      window.setTimeout(() => {
-        setCopied(false);
-      }, 2500);
-    } catch (error) {
-      if (error?.name !== "AbortError") {
-        console.error(
-          "Unable to share private note:",
-          error
-        );
-      }
     }
-  };
+  }
+};
 
   if (isRevealPage) {
     return (
