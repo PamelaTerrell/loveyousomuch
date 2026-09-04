@@ -904,6 +904,149 @@ svg {
   margin-bottom: 0;
 }
 
+.iconAction {
+  width: 36px;
+  min-height: 36px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.iconAction:hover:not(:disabled) {
+  background: var(--surface-soft);
+  color: var(--accent-dark);
+}
+
+.reportAction {
+  margin-left: auto;
+}
+
+.reportActionComplete {
+  color: var(--accent-primary);
+}
+
+.iconAction:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.reportOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+
+  padding: 1rem;
+
+  display: grid;
+  place-items: center;
+
+  overflow-y: auto;
+
+  background: rgba(62, 44, 49, 0.45);
+
+  backdrop-filter: blur(5px);
+}
+
+.reportDialog {
+  position: relative;
+
+  width: min(560px, 100%);
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-large);
+
+  background: var(--surface-primary);
+
+  box-shadow:
+    0 25px 70px rgba(62, 44, 49, 0.2);
+}
+
+.reportDialog h2 {
+  margin: 0 0 0.8rem;
+
+  color: var(--text-primary);
+
+  font-family: Georgia, serif;
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  font-weight: 500;
+}
+
+.reportIntroduction {
+  margin: 0 0 1.5rem;
+
+  color: var(--text-secondary);
+}
+
+.reportCloseButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+
+  width: 36px;
+  height: 36px;
+
+  display: grid;
+  place-items: center;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+
+  font-size: 1.35rem;
+}
+
+.reportedNotePreview {
+  margin-bottom: 1.5rem;
+  padding: 1.2rem;
+
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-medium);
+
+  background: var(--background-cream);
+}
+
+.reportedNotePreview blockquote {
+  margin: 0;
+
+  color: var(--text-primary);
+
+  font-family: Georgia, serif;
+  line-height: 1.6;
+}
+
+.reportDialog .formField textarea {
+  min-height: 110px;
+}
+
+.reportDialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.7rem;
+
+  margin-top: 1rem;
+}
+
+@media (max-width: 520px) {
+  .reportDialogActions {
+    flex-direction: column-reverse;
+  }
+
+  .reportDialogActions .secondaryAction,
+  .reportDialogActions .submitLoveButton {
+    width: 100%;
+  }
+}
+
 /* =========================================================
    Footer
    ========================================================= */

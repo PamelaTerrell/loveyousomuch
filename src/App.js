@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
+  Flag,
   Heart,
   Send,
   Shuffle,
@@ -7,10 +8,11 @@ import {
 } from "lucide-react";
 import { Analytics } from "@vercel/analytics/react";
 import { supabase } from "./lib/supabase";
-import "./App.css";
 import Admin from "./Admin";
+import "./App.css";
 
 const MAX_MESSAGE_LENGTH = 500;
+const MAX_REPORT_DETAILS_LENGTH = 300;
 
 const categories = [
   "All",
@@ -21,6 +23,14 @@ const categories = [
   "Missing You",
   "Pets",
   "Self-Love",
+];
+
+const reportReasons = [
+  "Inappropriate",
+  "Harassment",
+  "Private information",
+  "Spam",
+  "Other",
 ];
 
 const starterNotes = [
@@ -128,6 +138,13 @@ function App() {
 
   const [heartedNotes, setHeartedNotes] = useState(new Set());
 
+  const [reportedNotes, setReportedNotes] = useState(new Set());
+  const [reportingNote, setReportingNote] = useState(null);
+  const [reportReason, setReportReason] = useState("Inappropriate");
+  const [reportDetails, setReportDetails] = useState("");
+  const [reportMessage, setReportMessage] = useState("");
+  const [submittingReport, setSubmittingReport] = useState(false);
+
   useEffect(() => {
     let cancelled = false;
 
@@ -181,11 +198,11 @@ function App() {
         isStarter: false,
       }));
 
-      if (approvedNotes.length > 0) {
-        setNotes(approvedNotes);
-      } else {
-        setNotes(starterNotes);
-      }
+      setNotes(
+        approvedNotes.length > 0
+          ? approvedNotes
+          : starterNotes
+      );
 
       try {
         const browserId = getBrowserId();
@@ -214,10 +231,35 @@ function App() {
             )
           );
         }
-      } catch (heartLoadError) {
+
+        const {
+          data: existingReports,
+          error: existingReportsError,
+        } = await supabase.rpc(
+          "get_reported_message_ids",
+          {
+            p_browser_id: browserId,
+          }
+        );
+
+        if (existingReportsError) {
+          console.error(
+            "Unable to load existing reports:",
+            existingReportsError
+          );
+        } else if (!cancelled) {
+          setReportedNotes(
+            new Set(
+              (existingReports || []).map(
+                (report) => report.message_id
+              )
+            )
+          );
+        }
+      } catch (browserStateError) {
         console.error(
-          "Unable to initialize browser heart state:",
-          heartLoadError
+          "Unable to initialize browser interaction state:",
+          browserStateError
         );
       }
 
@@ -258,6 +300,9 @@ function App() {
   const charactersLeft =
     MAX_MESSAGE_LENGTH - message.length;
 
+  const reportCharactersLeft =
+    MAX_REPORT_DETAILS_LENGTH - reportDetails.length;
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -285,7 +330,10 @@ function App() {
       });
 
     if (error) {
-      console.error("Unable to submit love note:", error);
+      console.error(
+        "Unable to submit love note:",
+        error
+      );
 
       setSubmissionMessage(
         "Your note couldn't be sent just yet. Please try again in a moment."
@@ -316,11 +364,6 @@ function App() {
       return;
     }
 
-    /*
-     * Starter notes are not stored in Supabase.
-     * Their hearts remain decorative/local until
-     * the starter content is seeded into the database.
-     */
     if (targetNote.isStarter) {
       setNotes((currentNotes) =>
         currentNotes.map((note) =>
@@ -342,10 +385,6 @@ function App() {
 
     const browserId = getBrowserId();
 
-    /*
-     * Optimistic update:
-     * make the heart feel immediate.
-     */
     setHeartedNotes((current) => {
       const updated = new Set(current);
       updated.add(noteId);
@@ -397,10 +436,6 @@ function App() {
       return;
     }
 
-    /*
-     * false means Supabase already had a heart
-     * from this browser for this message.
-     */
     if (data === false) {
       setNotes((currentNotes) =>
         currentNotes.map((note) =>
@@ -416,6 +451,86 @@ function App() {
         )
       );
     }
+  };
+
+  const openReportDialog = (note) => {
+    if (
+      note.isStarter ||
+      reportedNotes.has(note.id)
+    ) {
+      return;
+    }
+
+    setReportingNote(note);
+    setReportReason("Inappropriate");
+    setReportDetails("");
+    setReportMessage("");
+  };
+
+  const closeReportDialog = () => {
+    if (submittingReport) {
+      return;
+    }
+
+    setReportingNote(null);
+    setReportReason("Inappropriate");
+    setReportDetails("");
+    setReportMessage("");
+  };
+
+  const handleReportSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!reportingNote) {
+      return;
+    }
+
+    const browserId = getBrowserId();
+
+    setSubmittingReport(true);
+    setReportMessage("");
+
+    const { data, error } = await supabase.rpc(
+      "report_love_message",
+      {
+        p_message_id: reportingNote.id,
+        p_browser_id: browserId,
+        p_reason: reportReason,
+        p_details: reportDetails.trim() || null,
+      }
+    );
+
+    if (error) {
+      console.error(
+        "Unable to report love note:",
+        error
+      );
+
+      setReportMessage(
+        "The report couldn't be submitted right now. Please try again."
+      );
+
+      setSubmittingReport(false);
+      return;
+    }
+
+    setReportedNotes((current) => {
+      const updated = new Set(current);
+      updated.add(reportingNote.id);
+      return updated;
+    });
+
+    if (data === false) {
+      setReportMessage(
+        "You've already reported this love note."
+      );
+    } else {
+      setReportMessage(
+        "Thank you. Your report was sent for review."
+      );
+    }
+
+    setSubmittingReport(false);
   };
 
   const showRandomNote = () => {
@@ -876,6 +991,9 @@ function App() {
                 const alreadyHearted =
                   heartedNotes.has(note.id);
 
+                const alreadyReported =
+                  reportedNotes.has(note.id);
+
                 return (
                   <article
                     className="loveNoteCard"
@@ -937,6 +1055,36 @@ function App() {
 
                         {note.hearts}
                       </button>
+
+                      <button
+                        type="button"
+                        className={
+                          alreadyReported
+                            ? "iconAction reportAction reportActionComplete"
+                            : "iconAction reportAction"
+                        }
+                        onClick={() =>
+                          openReportDialog(note)
+                        }
+                        disabled={
+                          note.isStarter ||
+                          alreadyReported
+                        }
+                        aria-label={
+                          alreadyReported
+                            ? "You reported this note"
+                            : "Report this note"
+                        }
+                        title={
+                          note.isStarter
+                            ? "Example notes cannot be reported"
+                            : alreadyReported
+                              ? "You already reported this note"
+                              : "Report this note"
+                        }
+                      >
+                        <Flag size={15} />
+                      </button>
                     </div>
                   </article>
                 );
@@ -969,6 +1117,150 @@ function App() {
           </div>
         </section>
       </main>
+
+      {reportingNote && (
+        <div
+          className="reportOverlay"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              closeReportDialog();
+            }
+          }}
+        >
+          <section
+            className="reportDialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="report-title"
+          >
+            <button
+              type="button"
+              className="reportCloseButton"
+              onClick={closeReportDialog}
+              disabled={submittingReport}
+              aria-label="Close report form"
+            >
+              ×
+            </button>
+
+            <p className="sectionEyebrow">
+              Help keep this corner kind
+            </p>
+
+            <h2 id="report-title">
+              Report this love note
+            </h2>
+
+            <p className="reportIntroduction">
+              If a note contains harassment, spam, private
+              information, or something inappropriate, you can
+              send it back for review.
+            </p>
+
+            <div className="reportedNotePreview">
+              <p className="noteRecipient">
+                For {reportingNote.recipient}
+              </p>
+
+              <blockquote>
+                “{reportingNote.message}”
+              </blockquote>
+            </div>
+
+            <form onSubmit={handleReportSubmit}>
+              <div className="formField">
+                <label htmlFor="report-reason">
+                  Why are you reporting this?
+                </label>
+
+                <select
+                  id="report-reason"
+                  value={reportReason}
+                  onChange={(event) =>
+                    setReportReason(event.target.value)
+                  }
+                >
+                  {reportReasons.map((reason) => (
+                    <option
+                      key={reason}
+                      value={reason}
+                    >
+                      {reason}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="formField">
+                <label htmlFor="report-details">
+                  Anything else we should know?
+                  <span className="optionalLabel">
+                    Optional
+                  </span>
+                </label>
+
+                <textarea
+                  id="report-details"
+                  value={reportDetails}
+                  onChange={(event) =>
+                    setReportDetails(event.target.value)
+                  }
+                  maxLength={MAX_REPORT_DETAILS_LENGTH}
+                  placeholder="A short explanation can help with review."
+                />
+
+                <div className="characterCounter">
+                  <span>
+                    A short explanation is enough.
+                  </span>
+
+                  <span>
+                    {reportCharactersLeft} characters left
+                  </span>
+                </div>
+              </div>
+
+              <div className="reportDialogActions">
+                <button
+                  type="button"
+                  className="secondaryAction"
+                  onClick={closeReportDialog}
+                  disabled={submittingReport}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className="submitLoveButton"
+                  disabled={submittingReport}
+                >
+                  <Flag size={15} />
+
+                  {submittingReport
+                    ? "Sending..."
+                    : "Send report"}
+                </button>
+              </div>
+
+              {reportMessage && (
+                <div
+                  className="submissionMessage"
+                  role="status"
+                >
+                  <Heart
+                    size={16}
+                    fill="currentColor"
+                  />
+
+                  {reportMessage}
+                </div>
+              )}
+            </form>
+          </section>
+        </div>
+      )}
 
       <footer className="siteFooter">
         <Heart size={14} fill="currentColor" />
