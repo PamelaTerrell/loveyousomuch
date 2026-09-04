@@ -90,18 +90,22 @@ const starterNotes = [
 const getBrowserId = () => {
   const storageKey = "love-wall-browser-id";
 
-  let browserId = localStorage.getItem(storageKey);
+  try {
+    let browserId = localStorage.getItem(storageKey);
 
-  if (!browserId) {
-    browserId =
-      typeof crypto !== "undefined" && crypto.randomUUID
-        ? crypto.randomUUID()
-        : `${Date.now()}-${Math.random()}`;
+    if (!browserId) {
+      browserId =
+        typeof crypto !== "undefined" && crypto.randomUUID
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random()}`;
 
-    localStorage.setItem(storageKey, browserId);
+      localStorage.setItem(storageKey, browserId);
+    }
+
+    return browserId;
+  } catch {
+    return `${Date.now()}-${Math.random()}`;
   }
-
-  return browserId;
 };
 
 function App() {
@@ -140,11 +144,9 @@ function App() {
             message,
             author_name,
             category,
+            hearts_count,
             created_at,
-            approved_at,
-            love_message_hearts (
-              id
-            )
+            approved_at
           `
         )
         .eq("visibility", "public")
@@ -162,6 +164,7 @@ function App() {
           "The community wall couldn't be refreshed right now, but a little love is still waiting for you."
         );
 
+        setNotes(starterNotes);
         setLoadingWall(false);
         return;
       }
@@ -172,7 +175,7 @@ function App() {
         message: note.message,
         author: note.author_name || "Anonymous",
         category: note.category,
-        hearts: note.love_message_hearts?.length || 0,
+        hearts: note.hearts_count || 0,
         createdAt: note.created_at,
         approvedAt: note.approved_at,
         isStarter: false,
@@ -187,16 +190,20 @@ function App() {
       try {
         const browserId = getBrowserId();
 
-        const { data: existingHearts, error: heartsError } =
-          await supabase
-            .from("love_message_hearts")
-            .select("message_id")
-            .eq("browser_id", browserId);
+        const {
+          data: existingHearts,
+          error: existingHeartsError,
+        } = await supabase.rpc(
+          "get_hearted_message_ids",
+          {
+            p_browser_id: browserId,
+          }
+        );
 
-        if (heartsError) {
+        if (existingHeartsError) {
           console.error(
-            "Unable to load existing heart reactions:",
-            heartsError
+            "Unable to load existing hearts:",
+            existingHeartsError
           );
         } else if (!cancelled) {
           setHeartedNotes(
@@ -214,7 +221,9 @@ function App() {
         );
       }
 
-      setLoadingWall(false);
+      if (!cancelled) {
+        setLoadingWall(false);
+      }
     };
 
     loadApprovedNotes();
@@ -272,6 +281,7 @@ function App() {
         category,
         visibility: "public",
         moderation_status: "pending",
+        hearts_count: 0,
       });
 
     if (error) {
@@ -298,12 +308,19 @@ function App() {
   };
 
   const handleHeart = async (noteId) => {
-    const targetNote = notes.find((note) => note.id === noteId);
+    const targetNote = notes.find(
+      (note) => note.id === noteId
+    );
 
     if (!targetNote) {
       return;
     }
 
+    /*
+     * Starter notes are not stored in Supabase.
+     * Their hearts remain decorative/local until
+     * the starter content is seeded into the database.
+     */
     if (targetNote.isStarter) {
       setNotes((currentNotes) =>
         currentNotes.map((note) =>
@@ -325,6 +342,10 @@ function App() {
 
     const browserId = getBrowserId();
 
+    /*
+     * Optimistic update:
+     * make the heart feel immediate.
+     */
     setHeartedNotes((current) => {
       const updated = new Set(current);
       updated.add(noteId);
@@ -342,17 +363,16 @@ function App() {
       )
     );
 
-    const { error } = await supabase
-      .from("love_message_hearts")
-      .insert({
-        message_id: noteId,
-        browser_id: browserId,
-      });
+    const { data, error } = await supabase.rpc(
+      "add_love_message_heart",
+      {
+        p_message_id: noteId,
+        p_browser_id: browserId,
+      }
+    );
 
     if (error) {
-      if (error.code !== "23505") {
-        console.error("Unable to save heart:", error);
-      }
+      console.error("Unable to save heart:", error);
 
       setHeartedNotes((current) => {
         const updated = new Set(current);
@@ -360,6 +380,28 @@ function App() {
         return updated;
       });
 
+      setNotes((currentNotes) =>
+        currentNotes.map((note) =>
+          note.id === noteId
+            ? {
+                ...note,
+                hearts: Math.max(
+                  0,
+                  (note.hearts || 0) - 1
+                ),
+              }
+            : note
+        )
+      );
+
+      return;
+    }
+
+    /*
+     * false means Supabase already had a heart
+     * from this browser for this message.
+     */
+    if (data === false) {
       setNotes((currentNotes) =>
         currentNotes.map((note) =>
           note.id === noteId
@@ -495,31 +537,44 @@ function App() {
                   — {featuredNote.author}
                 </span>
 
-                <button
-                  type="button"
-                  className={
-                    heartedNotes.has(featuredNote.id)
-                      ? "heartButton heartButtonActive"
-                      : "heartButton"
-                  }
-                  onClick={() =>
-                    handleHeart(featuredNote.id)
-                  }
-                  disabled={
-                    !featuredNote.isStarter &&
-                    heartedNotes.has(featuredNote.id)
-                  }
-                >
-                  <Heart
-                    size={16}
-                    fill={
-                      heartedNotes.has(featuredNote.id)
-                        ? "currentColor"
-                        : "none"
-                    }
-                  />
-                  {featuredNote.hearts}
-                </button>
+                {(() => {
+                  const alreadyHearted =
+                    heartedNotes.has(featuredNote.id);
+
+                  return (
+                    <button
+                      type="button"
+                      className={
+                        alreadyHearted
+                          ? "heartButton heartButtonActive"
+                          : "heartButton"
+                      }
+                      onClick={() =>
+                        handleHeart(featuredNote.id)
+                      }
+                      disabled={
+                        !featuredNote.isStarter &&
+                        alreadyHearted
+                      }
+                      aria-label={
+                        alreadyHearted
+                          ? `You sent a heart to this note. ${featuredNote.hearts} hearts`
+                          : `Send a heart to this note. ${featuredNote.hearts} hearts`
+                      }
+                    >
+                      <Heart
+                        size={16}
+                        fill={
+                          alreadyHearted
+                            ? "currentColor"
+                            : "none"
+                        }
+                      />
+
+                      {featuredNote.hearts}
+                    </button>
+                  );
+                })()}
               </div>
             </article>
           </section>
@@ -801,6 +856,7 @@ function App() {
                 size={17}
                 fill="currentColor"
               />
+
               Gathering a little love...
             </div>
           )}
@@ -915,35 +971,35 @@ function App() {
       </main>
 
       <footer className="siteFooter">
-  <Heart size={14} fill="currentColor" />
+        <Heart size={14} fill="currentColor" />
 
-  <div className="footerText">
-    <p>
-      I Love You So Much is a digital project from{" "}
-      <a
-        href="https://www.stabileusa.com"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Stabile USA
-      </a>{" "}
-      — independent ideas built around human connection.
-    </p>
+        <div className="footerText">
+          <p>
+            I Love You So Much is a digital project from{" "}
+            <a
+              href="https://www.stabileusa.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Stabile USA
+            </a>{" "}
+            — independent ideas built around human connection.
+          </p>
 
-    <p>
-      Created by{" "}
-      <a
-        href="https://pamelajterrell.com"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Pamela Terrell
-      </a>.
-    </p>
-  </div>
+          <p>
+            Created by{" "}
+            <a
+              href="https://pamelajterrell.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Pamela Terrell
+            </a>.
+          </p>
+        </div>
 
-  <Heart size={14} fill="currentColor" />
-</footer>
+        <Heart size={14} fill="currentColor" />
+      </footer>
 
       <Analytics />
     </div>
