@@ -295,6 +295,43 @@
   background: #fffaf8;
 }
 
+.privateShareActions {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.privateShareActions button {
+  min-height: 38px;
+  padding: 0 0.8rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: #ad4f67;
+  color: white;
+
+  font-weight: 750;
+}
+
+.privateShareActions button:hover {
+  background: #85384d;
+}
+
+@media (max-width: 600px) {
+  .privateShareActions {
+    width: 100%;
+  }
+
+  .privateShareActions button {
+    flex: 1;
+  }
+}
+
 .privateShareLink span {
   min-width: 0;
   flex: 1;

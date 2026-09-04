@@ -5,6 +5,7 @@ import {
   Heart,
   LockKeyhole,
   Send,
+  Share2,
   Sparkles,
 } from "lucide-react";
 import { supabase } from "./lib/supabase";
@@ -34,7 +35,8 @@ function PrivateLoveNote() {
   const [composerMessage, setComposerMessage] = useState("");
 
   const [privateNote, setPrivateNote] = useState(null);
-  const [loadingNote, setLoadingNote] = useState(isRevealPage);
+  const [loadingNote, setLoadingNote] =
+    useState(isRevealPage);
   const [noteError, setNoteError] = useState("");
 
   const charactersLeft =
@@ -169,6 +171,42 @@ function PrivateLoveNote() {
         "Unable to copy private note link:",
         error
       );
+    }
+  };
+
+  const sharePrivateNote = async () => {
+    if (!createdLink) {
+      return;
+    }
+
+    const shareData = {
+      title: "A private love note for you",
+      text: "Someone made you a private love note 💗",
+      url: createdLink,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        return;
+      }
+
+      await navigator.clipboard.writeText(
+        createdLink
+      );
+
+      setCopied(true);
+
+      window.setTimeout(() => {
+        setCopied(false);
+      }, 2500);
+    } catch (error) {
+      if (error?.name !== "AbortError") {
+        console.error(
+          "Unable to share private note:",
+          error
+        );
+      }
     }
   };
 
@@ -425,19 +463,30 @@ function PrivateLoveNote() {
                 {createdLink}
               </span>
 
-              <button
-                type="button"
-                onClick={copyShareLink}
-                aria-label="Copy private love note link"
-              >
-                {copied ? (
-                  <Check size={17} />
-                ) : (
-                  <Copy size={17} />
-                )}
+              <div className="privateShareActions">
+                <button
+                  type="button"
+                  onClick={copyShareLink}
+                  aria-label="Copy private love note link"
+                >
+                  {copied ? (
+                    <Check size={17} />
+                  ) : (
+                    <Copy size={17} />
+                  )}
 
-                {copied ? "Copied" : "Copy"}
-              </button>
+                  {copied ? "Copied" : "Copy"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={sharePrivateNote}
+                  aria-label="Share private love note"
+                >
+                  <Share2 size={17} />
+                  Share
+                </button>
+              </div>
             </div>
 
             <a
