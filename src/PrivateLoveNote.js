@@ -60,7 +60,11 @@ function PrivateLoveNote() {
     useState("blush");
 
   const [submitting, setSubmitting] = useState(false);
+
   const [createdLink, setCreatedLink] = useState("");
+  const [createdPreviewLink, setCreatedPreviewLink] =
+    useState("");
+
   const [copied, setCopied] = useState(false);
   const [composerMessage, setComposerMessage] =
     useState("");
@@ -145,7 +149,10 @@ function PrivateLoveNote() {
     setSubmitting(true);
     setComposerMessage("");
     setCreatedLink("");
+    setCreatedPreviewLink("");
     setCopied(false);
+
+    const selectedTheme = envelopeTheme;
 
     const { data, error } = await supabase.rpc(
       "create_private_love_note",
@@ -153,7 +160,7 @@ function PrivateLoveNote() {
         p_recipient: cleanRecipient,
         p_message: cleanMessage,
         p_author_name: cleanAuthor || null,
-        p_envelope_theme: envelopeTheme,
+        p_envelope_theme: selectedTheme,
       }
     );
 
@@ -171,10 +178,24 @@ function PrivateLoveNote() {
       return;
     }
 
-    const link =
-      `https://www.iloveyousomuch.love/open/${envelopeTheme}/${data}`;
+    /*
+     * This is the public sharing URL.
+     * It exists so Messages/social apps can read the
+     * matching Open Graph preview image.
+     */
+    const shareLink =
+      `https://www.iloveyousomuch.love/open/${selectedTheme}/${data}`;
 
-    setCreatedLink(link);
+    /*
+     * This is the actual private-note reveal URL.
+     * The sender uses this to preview the finished note
+     * before sharing it.
+     */
+    const previewLink =
+      `https://www.iloveyousomuch.love/love/${data}`;
+
+    setCreatedLink(shareLink);
+    setCreatedPreviewLink(previewLink);
 
     setRecipient("");
     setMessage("");
@@ -570,13 +591,23 @@ function PrivateLoveNote() {
             </p>
 
             <h2>
-              Send this to someone you love.
+              Take a peek before you send it.
             </h2>
 
             <p>
-              They&apos;ll be able to tap the link
-              and open their private note.
+              Preview the finished note first, then
+              share it whenever you&apos;re ready.
             </p>
+
+            <a
+              className="privatePreviewLink privatePreviewPrimary"
+              href={createdPreviewLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Sparkles size={16} />
+              Preview their note
+            </a>
 
             <div className="privateShareLink">
               <span>
@@ -619,27 +650,17 @@ function PrivateLoveNote() {
             </div>
 
             <p className="privateShareHint">
-              For the sweetest experience, use
-              <strong> Text It </strong>
-              or
-              <strong> Share </strong>
-              so the recipient gets a tappable message.
+              The recipient will get the
+              <strong> color-matched envelope preview </strong>
+              you selected above.
             </p>
-
-            <a
-              className="privatePreviewLink"
-              href={createdLink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Preview their note
-            </a>
 
             <button
               type="button"
               className="privateSecondaryButton"
               onClick={() => {
                 setCreatedLink("");
+                setCreatedPreviewLink("");
                 setComposerMessage("");
                 setCopied(false);
               }}
