@@ -14,6 +14,12 @@ import "./PrivateLoveNote.css";
 
 const MAX_MESSAGE_LENGTH = 500;
 
+const SITE_URL =
+  "https://www.iloveyousomuch.love";
+
+const PRIVATE_NOTE_SESSION_KEY =
+  "private-love-note-session";
+
 const ENVELOPE_THEMES = [
   {
     value: "blush",
@@ -40,6 +46,11 @@ const ENVELOPE_THEMES = [
     label: "Ivory",
   },
 ];
+
+const VALID_ENVELOPE_THEMES =
+  ENVELOPE_THEMES.map(
+    (theme) => theme.value
+  );
 
 const REVEAL_THEME_STYLES = {
   blush: {
@@ -103,21 +114,92 @@ const REVEAL_THEME_STYLES = {
   },
 };
 
-const VALID_ENVELOPE_THEMES =
-  ENVELOPE_THEMES.map((theme) => theme.value);
-
-const SITE_URL =
-  "https://www.iloveyousomuch.love";
-
 const getSafeTheme = (value) =>
   VALID_ENVELOPE_THEMES.includes(value)
     ? value
     : "blush";
 
+const loadPrivateNoteSession = () => {
+  try {
+    const saved =
+      window.sessionStorage.getItem(
+        PRIVATE_NOTE_SESSION_KEY
+      );
+
+    if (!saved) {
+      return null;
+    }
+
+    const parsed =
+      JSON.parse(saved);
+
+    return {
+      recipient:
+        typeof parsed.recipient === "string"
+          ? parsed.recipient
+          : "",
+
+      message:
+        typeof parsed.message === "string"
+          ? parsed.message
+          : "",
+
+      author:
+        typeof parsed.author === "string"
+          ? parsed.author
+          : "",
+
+      envelopeTheme:
+        getSafeTheme(
+          parsed.envelopeTheme
+        ),
+
+      createdShareLink:
+        typeof parsed.createdShareLink === "string"
+          ? parsed.createdShareLink
+          : "",
+
+      createdPreviewLink:
+        typeof parsed.createdPreviewLink === "string"
+          ? parsed.createdPreviewLink
+          : "",
+    };
+  } catch {
+    return null;
+  }
+};
+
+const savePrivateNoteSession = (
+  data
+) => {
+  try {
+    window.sessionStorage.setItem(
+      PRIVATE_NOTE_SESSION_KEY,
+      JSON.stringify(data)
+    );
+  } catch {
+    /*
+     * Private-note creation can still work if
+     * browser storage is unavailable.
+     */
+  }
+};
+
+const clearPrivateNoteSession = () => {
+  try {
+    window.sessionStorage.removeItem(
+      PRIVATE_NOTE_SESSION_KEY
+    );
+  } catch {
+    // Nothing else is required.
+  }
+};
+
 function PrivateLoveNote() {
-  const pathParts = window.location.pathname
-    .split("/")
-    .filter(Boolean);
+  const pathParts =
+    window.location.pathname
+      .split("/")
+      .filter(Boolean);
 
   /*
    * Reveal routes:
@@ -153,21 +235,41 @@ function PrivateLoveNote() {
     "sender";
 
   /*
+   * Only load saved composer data on
+   * the /private composer page.
+   */
+  const savedSession =
+    !isRevealPage
+      ? loadPrivateNoteSession()
+      : null;
+
+  /*
    * Composer state
    */
   const [recipient, setRecipient] =
-    useState("");
+    useState(
+      savedSession?.recipient || ""
+    );
 
   const [message, setMessage] =
-    useState("");
+    useState(
+      savedSession?.message || ""
+    );
 
   const [author, setAuthor] =
-    useState("");
+    useState(
+      savedSession?.author || ""
+    );
 
   const [
     envelopeTheme,
     setEnvelopeTheme,
-  ] = useState("blush");
+  ] = useState(
+    getSafeTheme(
+      savedSession?.envelopeTheme ||
+        "blush"
+    )
+  );
 
   const [submitting, setSubmitting] =
     useState(false);
@@ -183,12 +285,18 @@ function PrivateLoveNote() {
   const [
     createdShareLink,
     setCreatedShareLink,
-  ] = useState("");
+  ] = useState(
+    savedSession?.createdShareLink ||
+      ""
+  );
 
   const [
     createdPreviewLink,
     setCreatedPreviewLink,
-  ] = useState("");
+  ] = useState(
+    savedSession?.createdPreviewLink ||
+      ""
+  );
 
   const [copied, setCopied] =
     useState(false);
@@ -216,7 +324,42 @@ function PrivateLoveNote() {
     message.length;
 
   /*
-   * Load a private note when visiting
+   * Save an unfinished private-note draft
+   * during this browser session.
+   *
+   * Once a note has been created, its complete
+   * saved session is written in handleCreate
+   * instead.
+   */
+  useEffect(() => {
+    if (isRevealPage) {
+      return;
+    }
+
+    if (createdShareLink) {
+      return;
+    }
+
+    savePrivateNoteSession({
+      recipient,
+      message,
+      author,
+      envelopeTheme,
+      createdShareLink: "",
+      createdPreviewLink: "",
+    });
+  }, [
+    recipient,
+    message,
+    author,
+    envelopeTheme,
+    createdShareLink,
+    isRevealPage,
+  ]);
+
+  /*
+   * Load a private note when visiting:
+   *
    * /love/THEME/TOKEN
    */
   useEffect(() => {
@@ -229,54 +372,55 @@ function PrivateLoveNote() {
 
     let cancelled = false;
 
-    const loadPrivateNote = async () => {
-      setLoadingNote(true);
-      setNoteError("");
+    const loadPrivateNote =
+      async () => {
+        setLoadingNote(true);
+        setNoteError("");
 
-      const { data, error } =
-        await supabase.rpc(
-          "get_private_love_note",
-          {
-            p_share_token:
-              shareToken,
-          }
-        );
+        const { data, error } =
+          await supabase.rpc(
+            "get_private_love_note",
+            {
+              p_share_token:
+                shareToken,
+            }
+          );
 
-      if (cancelled) {
-        return;
-      }
+        if (cancelled) {
+          return;
+        }
 
-      if (error) {
-        console.error(
-          "Unable to load private love note:",
-          error
-        );
+        if (error) {
+          console.error(
+            "Unable to load private love note:",
+            error
+          );
 
-        setNoteError(
-          "This private love note couldn't be opened."
-        );
+          setNoteError(
+            "This private love note couldn't be opened."
+          );
 
+          setLoadingNote(false);
+          return;
+        }
+
+        const note =
+          Array.isArray(data)
+            ? data[0]
+            : null;
+
+        if (!note) {
+          setNoteError(
+            "This private love note doesn't seem to exist."
+          );
+
+          setLoadingNote(false);
+          return;
+        }
+
+        setPrivateNote(note);
         setLoadingNote(false);
-        return;
-      }
-
-      const note =
-        Array.isArray(data)
-          ? data[0]
-          : null;
-
-      if (!note) {
-        setNoteError(
-          "This private love note doesn't seem to exist."
-        );
-
-        setLoadingNote(false);
-        return;
-      }
-
-      setPrivateNote(note);
-      setLoadingNote(false);
-    };
+      };
 
     loadPrivateNote();
 
@@ -313,7 +457,9 @@ function PrivateLoveNote() {
     }
 
     const selectedTheme =
-      getSafeTheme(envelopeTheme);
+      getSafeTheme(
+        envelopeTheme
+      );
 
     setSubmitting(true);
     setComposerMessage("");
@@ -357,9 +503,11 @@ function PrivateLoveNote() {
       String(data);
 
     /*
-     * This URL is shared with the recipient.
-     * It lets Messages/social apps load
-     * the matching themed preview image.
+     * Recipient share URL.
+     *
+     * Messages/social apps read the selected
+     * envelope color from this route and load
+     * the corresponding OG preview image.
      */
     const shareLink =
       `${SITE_URL}/open/` +
@@ -367,15 +515,34 @@ function PrivateLoveNote() {
       `${token}`;
 
     /*
-     * This is the sender's direct preview.
-     * It bypasses the Open Graph redirect
-     * and opens the actual themed note.
+     * Sender preview URL.
+     *
+     * This opens the real love-note page,
+     * bypassing the social preview endpoint.
      */
     const previewLink =
       `${SITE_URL}/love/` +
       `${selectedTheme}/` +
       `${token}` +
       `?preview=sender`;
+
+    /*
+     * Preserve everything the sender entered.
+     *
+     * We intentionally DO NOT erase the
+     * recipient, message, author, or color here.
+     */
+    savePrivateNoteSession({
+      recipient: cleanRecipient,
+      message: cleanMessage,
+      author: cleanAuthor,
+      envelopeTheme:
+        selectedTheme,
+      createdShareLink:
+        shareLink,
+      createdPreviewLink:
+        previewLink,
+    });
 
     setCreatedShareLink(
       shareLink
@@ -385,42 +552,58 @@ function PrivateLoveNote() {
       previewLink
     );
 
-    setRecipient("");
-    setMessage("");
-    setAuthor("");
-    setEnvelopeTheme("blush");
+    /*
+     * Keep the composer state intact so
+     * returning from Preview restores it.
+     */
+    setRecipient(
+      cleanRecipient
+    );
+
+    setMessage(
+      cleanMessage
+    );
+
+    setAuthor(
+      cleanAuthor
+    );
+
+    setEnvelopeTheme(
+      selectedTheme
+    );
 
     setSubmitting(false);
   };
 
   /*
-   * Copy share URL
+   * Copy recipient share URL
    */
-  const copyShareLink = async () => {
-    if (!createdShareLink) {
-      return;
-    }
+  const copyShareLink =
+    async () => {
+      if (!createdShareLink) {
+        return;
+      }
 
-    try {
-      await navigator.clipboard.writeText(
-        createdShareLink
-      );
+      try {
+        await navigator.clipboard.writeText(
+          createdShareLink
+        );
 
-      setCopied(true);
+        setCopied(true);
 
-      window.setTimeout(() => {
-        setCopied(false);
-      }, 2500);
-    } catch (error) {
-      console.error(
-        "Unable to copy private note link:",
-        error
-      );
-    }
-  };
+        window.setTimeout(() => {
+          setCopied(false);
+        }, 2500);
+      } catch (error) {
+        console.error(
+          "Unable to copy private note link:",
+          error
+        );
+      }
+    };
 
   /*
-   * Native share sheet
+   * Native device share sheet
    */
   const sharePrivateNote =
     async () => {
@@ -467,7 +650,7 @@ function PrivateLoveNote() {
     };
 
   /*
-   * Open the phone's SMS composer
+   * Open phone SMS composer
    */
   const textPrivateNote = () => {
     if (!createdShareLink) {
@@ -498,13 +681,20 @@ function PrivateLoveNote() {
   };
 
   /*
-   * Sender preview normally opens in
-   * a separate tab. Close it to return
-   * to the still-open send/share page.
+   * Return from sender preview.
+   *
+   * Preview now opens in the SAME TAB,
+   * which is much more dependable on
+   * mobile Safari.
+   *
+   * sessionStorage restores the complete
+   * ready-to-send state.
    */
   const returnToSendPage = () => {
-    if (window.opener) {
-      window.close();
+    if (
+      window.history.length > 1
+    ) {
+      window.history.back();
       return;
     }
 
@@ -513,20 +703,40 @@ function PrivateLoveNote() {
   };
 
   /*
+   * Explicitly begin a fresh private note.
+   */
+  const startAnotherNote = () => {
+    clearPrivateNoteSession();
+
+    setRecipient("");
+    setMessage("");
+    setAuthor("");
+    setEnvelopeTheme("blush");
+
+    setCreatedShareLink("");
+    setCreatedPreviewLink("");
+
+    setComposerMessage("");
+    setCopied(false);
+  };
+
+  /*
    * Private-note reveal page
    */
   if (isRevealPage) {
     return (
       <main
-  className={
-    `privateLovePage privateLoveRevealPage ` +
-    `revealTheme-${revealTheme}`
-  }
-  style={
-    REVEAL_THEME_STYLES[revealTheme] ||
-    REVEAL_THEME_STYLES.blush
-  }
->
+        className={
+          `privateLovePage privateLoveRevealPage ` +
+          `revealTheme-${revealTheme}`
+        }
+        style={
+          REVEAL_THEME_STYLES[
+            revealTheme
+          ] ||
+          REVEAL_THEME_STYLES.blush
+        }
+      >
         <section className="privateReveal">
           <div className="privateHeartCluster">
             <Heart
@@ -632,9 +842,8 @@ function PrivateLoveNote() {
                 {isSenderPreview ? (
                   <div className="senderPreviewActions">
                     <p>
-                      This is how your private
-                      love note will look when
-                      they open it.
+                      This is how your private love
+                      note will look when they open it.
                     </p>
 
                     <button
@@ -654,18 +863,16 @@ function PrivateLoveNote() {
                         size={14}
                       />
 
-                      This note was shared
-                      privately and does not
-                      appear on the Community
-                      Wall.
+                      This note was shared privately
+                      and does not appear on the
+                      Community Wall.
                     </p>
 
                     <a
                       className="privateSecondaryButton"
                       href="/private"
                     >
-                      Write one for someone
-                      you love
+                      Write one for someone you love
                     </a>
                   </>
                 )}
@@ -708,10 +915,9 @@ function PrivateLoveNote() {
         </h1>
 
         <p className="privateIntroduction">
-          Write something meant for one
-          person. We&apos;ll give you a
-          private link to send directly to
-          them.
+          Write something meant for one person.
+          We&apos;ll give you a private link to
+          send directly to them.
         </p>
 
         {!createdShareLink ? (
@@ -865,12 +1071,11 @@ function PrivateLoveNote() {
               />
 
               <p>
-                Private notes do not appear
-                on the Community Wall.
-                Anyone with the unique link
-                can read the note, so only
-                share the link with the
-                person you intend.
+                Private notes do not appear on
+                the Community Wall. Anyone with
+                the unique link can read the
+                note, so only share the link
+                with the person you intend.
               </p>
             </div>
 
@@ -927,8 +1132,6 @@ function PrivateLoveNote() {
               href={
                 createdPreviewLink
               }
-              target="_blank"
-              rel="noopener noreferrer"
             >
               <Sparkles size={16} />
               Preview their note
@@ -979,6 +1182,7 @@ function PrivateLoveNote() {
                   <MessageCircle
                     size={17}
                   />
+
                   Text It
                 </button>
               </div>
@@ -988,8 +1192,7 @@ function PrivateLoveNote() {
               The recipient will get the
               <strong>
                 {" "}
-                color-matched envelope
-                preview{" "}
+                color-matched envelope preview{" "}
               </strong>
               you selected above.
             </p>
@@ -997,21 +1200,9 @@ function PrivateLoveNote() {
             <button
               type="button"
               className="privateSecondaryButton"
-              onClick={() => {
-                setCreatedShareLink(
-                  ""
-                );
-
-                setCreatedPreviewLink(
-                  ""
-                );
-
-                setComposerMessage(
-                  ""
-                );
-
-                setCopied(false);
-              }}
+              onClick={
+                startAnotherNote
+              }
             >
               Write another one
             </button>
