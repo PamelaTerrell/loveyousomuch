@@ -371,6 +371,216 @@
   color: #745e64;
 }
 
+/* =========================================================
+   Envelope chooser
+   ========================================================= */
+
+.privateEnvelopeSection {
+  margin: 1.5rem 0;
+}
+
+.privateEnvelopeHeading {
+  margin-bottom: 0.8rem;
+
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.privateEnvelopeHeading > span {
+  color: #3e2c31;
+
+  font-size: 0.86rem;
+  font-weight: 750;
+}
+
+.privateEnvelopeHeading small {
+  color: #9b858a;
+
+  font-size: 0.72rem;
+}
+
+.privateEnvelopeChoices {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+}
+
+.envelopeChoice {
+  padding: 0.8rem 0.55rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+
+  border: 1px solid #efdee2;
+  border-radius: 14px;
+
+  background: white;
+
+  cursor: pointer;
+
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.envelopeChoice:hover {
+  transform: translateY(-2px);
+}
+
+.envelopeChoiceActive {
+  border-color: #ad4f67;
+
+  box-shadow:
+    0 0 0 3px rgba(173, 79, 103, 0.1);
+}
+
+.envelopePreview {
+  position: relative;
+
+  width: 64px;
+  height: 44px;
+
+  display: block;
+
+  overflow: hidden;
+
+  border-radius: 5px;
+
+  background: var(--envelope-color);
+
+  box-shadow:
+    0 5px 12px rgba(62, 44, 49, 0.12);
+}
+
+.envelopeFlap {
+  position: absolute;
+  top: -25px;
+  left: 7px;
+
+  width: 50px;
+  height: 50px;
+
+  transform: rotate(45deg);
+
+  background: var(--envelope-flap);
+}
+
+.envelopeSeal {
+  position: absolute;
+  z-index: 2;
+  top: 17px;
+  left: 26px;
+
+  color: var(--seal-color);
+}
+
+.envelopeChoiceLabel {
+  color: #745e64;
+
+  font-size: 0.74rem;
+  font-weight: 750;
+}
+
+.envelope-blush {
+  --envelope-color: #f4cfd5;
+  --envelope-flap: #f8dce1;
+  --seal-color: #ad4f67;
+}
+
+.envelope-red {
+  --envelope-color: #983f4d;
+  --envelope-flap: #ad4a59;
+  --seal-color: #f7d8dc;
+}
+
+.envelope-navy {
+  --envelope-color: #314766;
+  --envelope-flap: #40597b;
+  --seal-color: #eef3f9;
+}
+
+.envelope-forest {
+  --envelope-color: #42624e;
+  --envelope-flap: #527561;
+  --seal-color: #edf5ef;
+}
+
+.envelope-black {
+  --envelope-color: #292929;
+  --envelope-flap: #393939;
+  --seal-color: #eeeeee;
+}
+
+.envelope-ivory {
+  --envelope-color: #ede4d2;
+  --envelope-flap: #f7f0e2;
+  --seal-color: #7d6659;
+}
+
+/* =========================================================
+   Recipient theme
+   ========================================================= */
+
+.privateNoteCard {
+  --note-accent: #ad4f67;
+  --note-background: #fff7f6;
+}
+
+.privateNoteCard.theme-blush {
+  --note-accent: #ad4f67;
+  --note-background: #fff3f5;
+}
+
+.privateNoteCard.theme-red {
+  --note-accent: #983f4d;
+  --note-background: #fff3f3;
+}
+
+.privateNoteCard.theme-navy {
+  --note-accent: #314766;
+  --note-background: #f1f5fa;
+}
+
+.privateNoteCard.theme-forest {
+  --note-accent: #42624e;
+  --note-background: #f1f6f2;
+}
+
+.privateNoteCard.theme-black {
+  --note-accent: #292929;
+  --note-background: #f5f5f5;
+}
+
+.privateNoteCard.theme-ivory {
+  --note-accent: #7d6659;
+  --note-background: #faf6ec;
+}
+
+.privateNoteCard {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      var(--note-background)
+    );
+}
+
+.privateNoteCard .privateSparkle,
+.privateNoteCard .privateRecipient {
+  color: var(--note-accent);
+}
+
+@media (max-width: 600px) {
+  .privateEnvelopeChoices {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 600px) {
   .privateShareActions {
     width: 100%;

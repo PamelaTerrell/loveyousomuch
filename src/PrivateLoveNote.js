@@ -14,6 +14,33 @@ import "./PrivateLoveNote.css";
 
 const MAX_MESSAGE_LENGTH = 500;
 
+const envelopeThemes = [
+  {
+    value: "blush",
+    label: "Blush",
+  },
+  {
+    value: "red",
+    label: "Deep Red",
+  },
+  {
+    value: "navy",
+    label: "Navy",
+  },
+  {
+    value: "forest",
+    label: "Forest",
+  },
+  {
+    value: "black",
+    label: "Black",
+  },
+  {
+    value: "ivory",
+    label: "Ivory",
+  },
+];
+
 function PrivateLoveNote() {
   const pathParts = window.location.pathname
     .split("/")
@@ -29,11 +56,14 @@ function PrivateLoveNote() {
   const [recipient, setRecipient] = useState("");
   const [message, setMessage] = useState("");
   const [author, setAuthor] = useState("");
+  const [envelopeTheme, setEnvelopeTheme] =
+    useState("blush");
 
   const [submitting, setSubmitting] = useState(false);
   const [createdLink, setCreatedLink] = useState("");
   const [copied, setCopied] = useState(false);
-  const [composerMessage, setComposerMessage] = useState("");
+  const [composerMessage, setComposerMessage] =
+    useState("");
 
   const [privateNote, setPrivateNote] = useState(null);
   const [loadingNote, setLoadingNote] =
@@ -123,6 +153,7 @@ function PrivateLoveNote() {
         p_recipient: cleanRecipient,
         p_message: cleanMessage,
         p_author_name: cleanAuthor || null,
+        p_envelope_theme: envelopeTheme,
       }
     );
 
@@ -141,13 +172,14 @@ function PrivateLoveNote() {
     }
 
     const link =
-  `https://www.iloveyousomuch.love/open/${data}`;
+      `https://www.iloveyousomuch.love/open/${envelopeTheme}/${data}`;
 
     setCreatedLink(link);
 
     setRecipient("");
     setMessage("");
     setAuthor("");
+    setEnvelopeTheme("blush");
 
     setSubmitting(false);
   };
@@ -294,7 +326,11 @@ function PrivateLoveNote() {
                 was made just for you.
               </p>
 
-              <article className="privateNoteCard">
+              <article
+                className={`privateNoteCard theme-${
+                  privateNote.envelope_theme || "blush"
+                }`}
+              >
                 <Sparkles
                   className="privateSparkle"
                   size={21}
@@ -425,6 +461,63 @@ function PrivateLoveNote() {
                 placeholder="Your name, initial, or leave it mysterious"
                 maxLength={40}
               />
+            </div>
+
+            <div className="privateEnvelopeSection">
+              <div className="privateEnvelopeHeading">
+                <span>
+                  Choose your envelope
+                </span>
+
+                <small>
+                  Make it feel like them.
+                </small>
+              </div>
+
+              <div
+                className="privateEnvelopeChoices"
+                role="radiogroup"
+                aria-label="Choose envelope color"
+              >
+                {envelopeThemes.map((theme) => {
+                  const selected =
+                    envelopeTheme === theme.value;
+
+                  return (
+                    <button
+                      key={theme.value}
+                      type="button"
+                      role="radio"
+                      aria-checked={selected}
+                      className={
+                        selected
+                          ? `envelopeChoice envelope-${theme.value} envelopeChoiceActive`
+                          : `envelopeChoice envelope-${theme.value}`
+                      }
+                      onClick={() =>
+                        setEnvelopeTheme(theme.value)
+                      }
+                    >
+                      <span
+                        className="envelopePreview"
+                        aria-hidden="true"
+                      >
+                        <span className="envelopeFlap" />
+
+                        <Heart
+                          className="envelopeSeal"
+                          size={13}
+                          fill="currentColor"
+                        />
+                      </span>
+
+                      <span className="envelopeChoiceLabel">
+                        {theme.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             <div className="privatePrivacyNotice">
