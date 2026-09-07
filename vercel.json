@@ -13,8 +13,8 @@
       "destination": "/"
     },
     {
-      "source": "/open/:token",
-      "destination": "/api/love-preview?token=:token"
+      "source": "/open/:theme/:token",
+      "destination": "/api/love-preview?theme=:theme&token=:token"
     }
   ]
 }
