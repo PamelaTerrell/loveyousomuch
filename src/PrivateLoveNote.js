@@ -14,7 +14,7 @@ import "./PrivateLoveNote.css";
 
 const MAX_MESSAGE_LENGTH = 500;
 
-const envelopeThemes = [
+const ENVELOPE_THEMES = [
   {
     value: "blush",
     label: "Blush",
@@ -41,47 +41,87 @@ const envelopeThemes = [
   },
 ];
 
-const validEnvelopeThemes =
-  envelopeThemes.map((theme) => theme.value);
+const VALID_ENVELOPE_THEMES =
+  ENVELOPE_THEMES.map((theme) => theme.value);
+
+const SITE_URL =
+  "https://www.iloveyousomuch.love";
+
+const getSafeTheme = (value) =>
+  VALID_ENVELOPE_THEMES.includes(value)
+    ? value
+    : "blush";
 
 function PrivateLoveNote() {
   const pathParts = window.location.pathname
     .split("/")
     .filter(Boolean);
 
+  /*
+   * Reveal routes:
+   *
+   * /love/navy/TOKEN
+   * /love/navy/TOKEN?preview=sender
+   */
   const isRevealPage =
     pathParts[0] === "love" &&
-    Boolean(pathParts[1]);
+    Boolean(pathParts[1]) &&
+    Boolean(pathParts[2]);
 
-  const shareToken =
-    isRevealPage ? pathParts[1] : null;
-
-  const searchParams =
-    new URLSearchParams(window.location.search);
-
-  const themeFromUrl =
-    searchParams.get("theme");
-
-  const isSenderPreview =
-    searchParams.get("preview") === "sender";
-
-  const safeUrlTheme =
-    validEnvelopeThemes.includes(themeFromUrl)
-      ? themeFromUrl
+  const themeFromPath =
+    isRevealPage
+      ? pathParts[1]
       : null;
 
-  const [recipient, setRecipient] = useState("");
-  const [message, setMessage] = useState("");
-  const [author, setAuthor] = useState("");
+  const shareToken =
+    isRevealPage
+      ? pathParts[2]
+      : null;
 
-  const [envelopeTheme, setEnvelopeTheme] =
-    useState("blush");
+  const revealTheme =
+    getSafeTheme(themeFromPath);
+
+  const searchParams =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const isSenderPreview =
+    searchParams.get("preview") ===
+    "sender";
+
+  /*
+   * Composer state
+   */
+  const [recipient, setRecipient] =
+    useState("");
+
+  const [message, setMessage] =
+    useState("");
+
+  const [author, setAuthor] =
+    useState("");
+
+  const [
+    envelopeTheme,
+    setEnvelopeTheme,
+  ] = useState("blush");
 
   const [submitting, setSubmitting] =
     useState(false);
 
-  const [createdLink, setCreatedLink] =
-    useState("");
+  const [
+    composerMessage,
+    setComposerMessage,
+  ] = useState("");
+
+  /*
+   * Created-note/share state
+   */
+  const [
+    createdShareLink,
+    setCreatedShareLink,
+  ] = useState("");
 
   const [
     createdPreviewLink,
@@ -91,25 +131,37 @@ function PrivateLoveNote() {
   const [copied, setCopied] =
     useState(false);
 
+  /*
+   * Reveal state
+   */
   const [
-    composerMessage,
-    setComposerMessage,
+    privateNote,
+    setPrivateNote,
+  ] = useState(null);
+
+  const [
+    loadingNote,
+    setLoadingNote,
+  ] = useState(isRevealPage);
+
+  const [
+    noteError,
+    setNoteError,
   ] = useState("");
 
-  const [privateNote, setPrivateNote] =
-    useState(null);
-
-  const [loadingNote, setLoadingNote] =
-    useState(isRevealPage);
-
-  const [noteError, setNoteError] =
-    useState("");
-
   const charactersLeft =
-    MAX_MESSAGE_LENGTH - message.length;
+    MAX_MESSAGE_LENGTH -
+    message.length;
 
+  /*
+   * Load a private note when visiting
+   * /love/THEME/TOKEN
+   */
   useEffect(() => {
-    if (!isRevealPage || !shareToken) {
+    if (
+      !isRevealPage ||
+      !shareToken
+    ) {
       return;
     }
 
@@ -123,7 +175,8 @@ function PrivateLoveNote() {
         await supabase.rpc(
           "get_private_love_note",
           {
-            p_share_token: shareToken,
+            p_share_token:
+              shareToken,
           }
         );
 
@@ -145,7 +198,10 @@ function PrivateLoveNote() {
         return;
       }
 
-      const note = data?.[0];
+      const note =
+        Array.isArray(data)
+          ? data[0]
+          : null;
 
       if (!note) {
         setNoteError(
@@ -165,9 +221,17 @@ function PrivateLoveNote() {
     return () => {
       cancelled = true;
     };
-  }, [isRevealPage, shareToken]);
+  }, [
+    isRevealPage,
+    shareToken,
+  ]);
 
-  const handleCreate = async (event) => {
+  /*
+   * Create private love note
+   */
+  const handleCreate = async (
+    event
+  ) => {
     event.preventDefault();
 
     const cleanRecipient =
@@ -186,23 +250,28 @@ function PrivateLoveNote() {
       return;
     }
 
+    const selectedTheme =
+      getSafeTheme(envelopeTheme);
+
     setSubmitting(true);
     setComposerMessage("");
-    setCreatedLink("");
+    setCreatedShareLink("");
     setCreatedPreviewLink("");
     setCopied(false);
-
-    const selectedTheme =
-      envelopeTheme;
 
     const { data, error } =
       await supabase.rpc(
         "create_private_love_note",
         {
-          p_recipient: cleanRecipient,
-          p_message: cleanMessage,
+          p_recipient:
+            cleanRecipient,
+
+          p_message:
+            cleanMessage,
+
           p_author_name:
             cleanAuthor || null,
+
           p_envelope_theme:
             selectedTheme,
         }
@@ -222,26 +291,34 @@ function PrivateLoveNote() {
       return;
     }
 
+    const token =
+      String(data);
+
     /*
-     * This is the share URL.
-     * Messages/social apps use it to load
-     * the matching Open Graph preview.
+     * This URL is shared with the recipient.
+     * It lets Messages/social apps load
+     * the matching themed preview image.
      */
     const shareLink =
-      `https://www.iloveyousomuch.love/open/${selectedTheme}/${data}`;
+      `${SITE_URL}/open/` +
+      `${selectedTheme}/` +
+      `${token}`;
 
     /*
-     * This is the sender preview URL.
-     * It opens the real private note directly,
-     * keeps the selected theme,
-     * and identifies itself as a sender preview.
+     * This is the sender's direct preview.
+     * It bypasses the Open Graph redirect
+     * and opens the actual themed note.
      */
     const previewLink =
-      `https://www.iloveyousomuch.love/love/${data}` +
-      `?theme=${selectedTheme}` +
-      `&preview=sender`;
+      `${SITE_URL}/love/` +
+      `${selectedTheme}/` +
+      `${token}` +
+      `?preview=sender`;
 
-    setCreatedLink(shareLink);
+    setCreatedShareLink(
+      shareLink
+    );
+
     setCreatedPreviewLink(
       previewLink
     );
@@ -254,14 +331,17 @@ function PrivateLoveNote() {
     setSubmitting(false);
   };
 
+  /*
+   * Copy share URL
+   */
   const copyShareLink = async () => {
-    if (!createdLink) {
+    if (!createdShareLink) {
       return;
     }
 
     try {
       await navigator.clipboard.writeText(
-        createdLink
+        createdShareLink
       );
 
       setCopied(true);
@@ -277,56 +357,64 @@ function PrivateLoveNote() {
     }
   };
 
-  const sharePrivateNote = async () => {
-    if (!createdLink) {
-      return;
-    }
-
-    const shareText =
-      `💗 Someone made you a private love note\n\n` +
-      `Open your surprise here:\n${createdLink}`;
-
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title:
-            "A private love note for you",
-          text: shareText,
-        });
-
+  /*
+   * Native share sheet
+   */
+  const sharePrivateNote =
+    async () => {
+      if (!createdShareLink) {
         return;
       }
 
-      await navigator.clipboard.writeText(
-        shareText
-      );
+      const shareText =
+        `💗 Someone made you a private love note\n\n` +
+        `Open your surprise here:\n${createdShareLink}`;
 
-      setCopied(true);
+      try {
+        if (navigator.share) {
+          await navigator.share({
+            title:
+              "A private love note for you",
 
-      window.setTimeout(() => {
-        setCopied(false);
-      }, 2500);
-    } catch (error) {
-      if (
-        error?.name !==
-        "AbortError"
-      ) {
-        console.error(
-          "Unable to share private note:",
-          error
+            text: shareText,
+          });
+
+          return;
+        }
+
+        await navigator.clipboard.writeText(
+          shareText
         );
-      }
-    }
-  };
 
+        setCopied(true);
+
+        window.setTimeout(() => {
+          setCopied(false);
+        }, 2500);
+      } catch (error) {
+        if (
+          error?.name !==
+          "AbortError"
+        ) {
+          console.error(
+            "Unable to share private note:",
+            error
+          );
+        }
+      }
+    };
+
+  /*
+   * Open the phone's SMS composer
+   */
   const textPrivateNote = () => {
-    if (!createdLink) {
+    if (!createdShareLink) {
       return;
     }
 
     const textMessage =
       `💗 Someone made you a private love note\n\n` +
-      `Open your surprise here:\n${createdLink}`;
+      `Open your surprise here:\n${createdShareLink}`;
 
     const encodedMessage =
       encodeURIComponent(
@@ -347,12 +435,12 @@ function PrivateLoveNote() {
       `sms:${separator}body=${encodedMessage}`;
   };
 
+  /*
+   * Sender preview normally opens in
+   * a separate tab. Close it to return
+   * to the still-open send/share page.
+   */
   const returnToSendPage = () => {
-    /*
-     * Sender preview normally opens in a new tab.
-     * Closing it returns the sender to the original
-     * send/share screen with their link still intact.
-     */
     if (window.opener) {
       window.close();
       return;
@@ -362,15 +450,16 @@ function PrivateLoveNote() {
       "/private";
   };
 
+  /*
+   * Private-note reveal page
+   */
   if (isRevealPage) {
-    const activeRevealTheme =
-      safeUrlTheme ||
-      privateNote?.envelope_theme ||
-      "blush";
-
     return (
       <main
-        className={`privateLovePage revealTheme-${activeRevealTheme}`}
+        className={
+          `privateLovePage ` +
+          `revealTheme-${revealTheme}`
+        }
       >
         <section className="privateReveal">
           <div className="privateHeartCluster">
@@ -440,7 +529,10 @@ function PrivateLoveNote() {
                 </p>
 
                 <article
-                  className={`privateNoteCard theme-${activeRevealTheme}`}
+                  className={
+                    `privateNoteCard ` +
+                    `theme-${revealTheme}`
+                  }
                 >
                   <Sparkles
                     className="privateSparkle"
@@ -448,52 +540,66 @@ function PrivateLoveNote() {
                   />
 
                   <p className="privateRecipient">
-                    For {privateNote.recipient}
+                    For{" "}
+                    {
+                      privateNote.recipient
+                    }
                   </p>
 
                   <blockquote>
-                    “{privateNote.message}”
+                    “
+                    {
+                      privateNote.message
+                    }
+                    ”
                   </blockquote>
 
                   <p className="privateAuthor">
                     —{" "}
-                    {privateNote.author_name ||
-                      "Someone who loves you"}
+                    {
+                      privateNote.author_name ||
+                      "Someone who loves you"
+                    }
                   </p>
                 </article>
 
-                {isSenderPreview && (
+                {isSenderPreview ? (
                   <div className="senderPreviewActions">
                     <p>
-                      This is how your private love note
-                      will look when they open it.
+                      This is how your private
+                      love note will look when
+                      they open it.
                     </p>
 
                     <button
                       type="button"
                       className="privatePrimaryButton senderReturnButton"
-                      onClick={returnToSendPage}
+                      onClick={
+                        returnToSendPage
+                      }
                     >
                       ← Return to send page
                     </button>
                   </div>
-                )}
-
-                {!isSenderPreview && (
+                ) : (
                   <>
                     <p className="privatePrivacyMessage">
-                      <LockKeyhole size={14} />
+                      <LockKeyhole
+                        size={14}
+                      />
 
-                      This note was shared privately
-                      and does not appear on the
-                      Community Wall.
+                      This note was shared
+                      privately and does not
+                      appear on the Community
+                      Wall.
                     </p>
 
                     <a
                       className="privateSecondaryButton"
                       href="/private"
                     >
-                      Write one for someone you love
+                      Write one for someone
+                      you love
                     </a>
                   </>
                 )}
@@ -504,6 +610,9 @@ function PrivateLoveNote() {
     );
   }
 
+  /*
+   * Private-note composer
+   */
   return (
     <main className="privateLovePage">
       <section className="privateComposer">
@@ -533,12 +642,13 @@ function PrivateLoveNote() {
         </h1>
 
         <p className="privateIntroduction">
-          Write something meant for one person.
-          We&apos;ll give you a private link to send
-          directly to them.
+          Write something meant for one
+          person. We&apos;ll give you a
+          private link to send directly to
+          them.
         </p>
 
-        {!createdLink ? (
+        {!createdShareLink ? (
           <form
             className="privateLoveForm"
             onSubmit={handleCreate}
@@ -633,7 +743,7 @@ function PrivateLoveNote() {
                 role="radiogroup"
                 aria-label="Choose envelope color"
               >
-                {envelopeThemes.map(
+                {ENVELOPE_THEMES.map(
                   (theme) => {
                     const selected =
                       envelopeTheme ===
@@ -684,13 +794,17 @@ function PrivateLoveNote() {
             </div>
 
             <div className="privatePrivacyNotice">
-              <LockKeyhole size={17} />
+              <LockKeyhole
+                size={17}
+              />
 
               <p>
-                Private notes do not appear on the
-                Community Wall. Anyone with the unique
-                link can read the note, so only share
-                the link with the person you intend.
+                Private notes do not appear
+                on the Community Wall.
+                Anyone with the unique link
+                can read the note, so only
+                share the link with the
+                person you intend.
               </p>
             </div>
 
@@ -737,13 +851,16 @@ function PrivateLoveNote() {
             </h2>
 
             <p>
-              Preview the finished note first, then
-              share it whenever you&apos;re ready.
+              Preview the finished note first,
+              then share it whenever
+              you&apos;re ready.
             </p>
 
             <a
               className="privatePreviewLink privatePreviewPrimary"
-              href={createdPreviewLink}
+              href={
+                createdPreviewLink
+              }
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -753,13 +870,15 @@ function PrivateLoveNote() {
 
             <div className="privateShareLink">
               <span>
-                {createdLink}
+                {createdShareLink}
               </span>
 
               <div className="privateShareActions">
                 <button
                   type="button"
-                  onClick={copyShareLink}
+                  onClick={
+                    copyShareLink
+                  }
                   aria-label="Copy private love note link"
                 >
                   {copied ? (
@@ -803,7 +922,8 @@ function PrivateLoveNote() {
               The recipient will get the
               <strong>
                 {" "}
-                color-matched envelope preview{" "}
+                color-matched envelope
+                preview{" "}
               </strong>
               you selected above.
             </p>
@@ -812,9 +932,18 @@ function PrivateLoveNote() {
               type="button"
               className="privateSecondaryButton"
               onClick={() => {
-                setCreatedLink("");
-                setCreatedPreviewLink("");
-                setComposerMessage("");
+                setCreatedShareLink(
+                  ""
+                );
+
+                setCreatedPreviewLink(
+                  ""
+                );
+
+                setComposerMessage(
+                  ""
+                );
+
                 setCopied(false);
               }}
             >
