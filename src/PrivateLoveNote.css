@@ -833,3 +833,101 @@
     justify-content: center;
   }
 }
+
+/* =========================================================
+   Selected private love note theme
+   ========================================================= */
+
+.privateLoveRevealPage {
+  background:
+    radial-gradient(
+      circle at top,
+      var(--reveal-soft) 0%,
+      var(--reveal-page) 42%,
+      var(--reveal-page) 100%
+    );
+
+  color: var(--reveal-text);
+}
+
+.privateLoveRevealPage .privateHeartCluster {
+  color: var(--reveal-accent);
+}
+
+.privateLoveRevealPage .privateEyebrow {
+  color: var(--reveal-accent);
+}
+
+.privateLoveRevealPage .privateReveal h1 {
+  color: var(--reveal-text);
+}
+
+.privateLoveRevealPage .privateRevealIntro {
+  color: var(--reveal-muted);
+}
+
+/* Actual private note */
+
+.privateLoveRevealPage .privateNoteCard {
+  border-color: var(--reveal-border);
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      var(--reveal-soft) 100%
+    );
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.08);
+}
+
+.privateLoveRevealPage .privateSparkle,
+.privateLoveRevealPage .privateRecipient {
+  color: var(--reveal-accent);
+}
+
+.privateLoveRevealPage .privateNoteCard blockquote {
+  color: var(--reveal-text);
+}
+
+.privateLoveRevealPage .privateAuthor {
+  color: var(--reveal-muted);
+}
+
+/* Sender preview */
+
+.privateLoveRevealPage .senderPreviewActions p {
+  color: var(--reveal-muted);
+}
+
+.privateLoveRevealPage .senderReturnButton {
+  background: var(--reveal-accent);
+  color: #ffffff;
+}
+
+.privateLoveRevealPage .senderReturnButton:hover {
+  background: var(--reveal-accent-dark);
+}
+
+/* Recipient controls */
+
+.privateLoveRevealPage .privatePrivacyMessage {
+  color: var(--reveal-muted);
+}
+
+.privateLoveRevealPage .privatePrivacyMessage svg {
+  color: var(--reveal-accent);
+}
+
+.privateLoveRevealPage .privateSecondaryButton {
+  border-color: var(--reveal-border);
+
+  background: #ffffff;
+  color: var(--reveal-accent);
+}
+
+.privateLoveRevealPage .privateSecondaryButton:hover {
+  background: var(--reveal-soft);
+  color: var(--reveal-accent-dark);
+}

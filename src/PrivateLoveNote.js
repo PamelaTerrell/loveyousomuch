@@ -41,6 +41,68 @@ const ENVELOPE_THEMES = [
   },
 ];
 
+const REVEAL_THEME_STYLES = {
+  blush: {
+    "--reveal-accent": "#b84f6b",
+    "--reveal-accent-dark": "#8f3c53",
+    "--reveal-soft": "#fff1f4",
+    "--reveal-page": "#fff9f8",
+    "--reveal-border": "#efd8de",
+    "--reveal-text": "#3e2c31",
+    "--reveal-muted": "#8c747b",
+  },
+
+  red: {
+    "--reveal-accent": "#983f4d",
+    "--reveal-accent-dark": "#70303a",
+    "--reveal-soft": "#f9e7e9",
+    "--reveal-page": "#fff8f7",
+    "--reveal-border": "#e5c7cc",
+    "--reveal-text": "#442c30",
+    "--reveal-muted": "#80676b",
+  },
+
+  navy: {
+    "--reveal-accent": "#314766",
+    "--reveal-accent-dark": "#22344d",
+    "--reveal-soft": "#eaf0f7",
+    "--reveal-page": "#f6f8fb",
+    "--reveal-border": "#cad7e6",
+    "--reveal-text": "#26364d",
+    "--reveal-muted": "#63748a",
+  },
+
+  forest: {
+    "--reveal-accent": "#42624e",
+    "--reveal-accent-dark": "#304839",
+    "--reveal-soft": "#eaf2ec",
+    "--reveal-page": "#f7faf7",
+    "--reveal-border": "#ccdcd0",
+    "--reveal-text": "#304238",
+    "--reveal-muted": "#68786e",
+  },
+
+  black: {
+    "--reveal-accent": "#292929",
+    "--reveal-accent-dark": "#111111",
+    "--reveal-soft": "#ececec",
+    "--reveal-page": "#f7f7f7",
+    "--reveal-border": "#d0d0d0",
+    "--reveal-text": "#262626",
+    "--reveal-muted": "#707070",
+  },
+
+  ivory: {
+    "--reveal-accent": "#7d6659",
+    "--reveal-accent-dark": "#5e4c42",
+    "--reveal-soft": "#f4ecdd",
+    "--reveal-page": "#fbf8f1",
+    "--reveal-border": "#ded2bf",
+    "--reveal-text": "#493b34",
+    "--reveal-muted": "#85756c",
+  },
+};
+
 const VALID_ENVELOPE_THEMES =
   ENVELOPE_THEMES.map((theme) => theme.value);
 
@@ -456,11 +518,15 @@ function PrivateLoveNote() {
   if (isRevealPage) {
     return (
       <main
-        className={
-          `privateLovePage ` +
-          `revealTheme-${revealTheme}`
-        }
-      >
+  className={
+    `privateLovePage privateLoveRevealPage ` +
+    `revealTheme-${revealTheme}`
+  }
+  style={
+    REVEAL_THEME_STYLES[revealTheme] ||
+    REVEAL_THEME_STYLES.blush
+  }
+>
         <section className="privateReveal">
           <div className="privateHeartCluster">
             <Heart
