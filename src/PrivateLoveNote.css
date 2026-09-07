@@ -17,6 +17,26 @@
   color: #3e2c31;
 }
 
+.senderPreviewActions {
+  width: min(520px, 100%);
+  margin: 1.5rem auto 0;
+
+  text-align: center;
+}
+
+.senderPreviewActions p {
+  margin: 0 0 0.85rem;
+
+  color: #9b858a;
+
+  font-size: 0.8rem;
+}
+
+.senderReturnButton {
+  width: auto;
+  padding-inline: 1.25rem;
+}
+
 .privateComposer,
 .privateReveal {
   width: min(760px, 100%);

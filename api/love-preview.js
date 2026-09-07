@@ -12,8 +12,16 @@ const allowedThemes = new Set([
 export default function handler(req, res) {
   const { token, theme } = req.query;
 
-  if (!token || typeof token !== "string") {
-    res.status(400).send("Invalid private love note.");
+  if (
+    !token ||
+    typeof token !== "string"
+  ) {
+    res
+      .status(400)
+      .send(
+        "Invalid private love note."
+      );
+
     return;
   }
 
@@ -27,18 +35,30 @@ export default function handler(req, res) {
       ? theme
       : "blush";
 
-  /*
-   * This is the actual private-note reveal page.
-   */
-  const revealUrl =
-    `https://www.iloveyousomuch.love/love/${encodeURIComponent(token)}`;
+  const encodedToken =
+    encodeURIComponent(token);
 
   /*
-   * This is the URL being shared through Messages,
+   * This is the actual private-note page.
+   *
+   * IMPORTANT:
+   * Carry the selected theme into the reveal URL so
+   * the recipient sees the same color chosen by the
+   * sender.
+   */
+  const revealUrl =
+    `https://www.iloveyousomuch.love/love/${encodedToken}` +
+    `?theme=${safeTheme}`;
+
+  /*
+   * This is the URL shared through Messages,
    * Mail, social apps, etc.
+   *
+   * The selected theme is part of the URL so the
+   * preview service knows which envelope image to use.
    */
   const shareUrl =
-    `https://www.iloveyousomuch.love/open/${safeTheme}/${encodeURIComponent(token)}`;
+    `https://www.iloveyousomuch.love/open/${safeTheme}/${encodedToken}`;
 
   /*
    * Each envelope color has its own preview image.
@@ -48,6 +68,7 @@ export default function handler(req, res) {
 
   const html = `
     <!doctype html>
+
     <html lang="en">
       <head>
         <meta charset="utf-8" />
@@ -57,7 +78,9 @@ export default function handler(req, res) {
           content="width=device-width, initial-scale=1"
         />
 
-        <title>A Private Love Note for You</title>
+        <title>
+          A Private Love Note for You
+        </title>
 
         <meta
           name="description"
@@ -148,7 +171,12 @@ export default function handler(req, res) {
           content="A private love note is waiting for you."
         />
 
-        <!-- Human visitors continue to the real note -->
+        <!--
+          Human visitors continue to the actual
+          private love note.
+
+          The theme travels with them.
+        -->
 
         <meta
           http-equiv="refresh"
@@ -182,14 +210,15 @@ export default function handler(req, res) {
   );
 
   /*
-   * Preview services cache aggressively.
-   * One day is fine because each private note gets
-   * its own unique URL.
+   * Each private note has a unique URL, so
+   * caching its preview for a day is fine.
    */
   res.setHeader(
     "Cache-Control",
     "public, max-age=0, s-maxage=86400"
   );
 
-  res.status(200).send(html);
+  res
+    .status(200)
+    .send(html);
 }
