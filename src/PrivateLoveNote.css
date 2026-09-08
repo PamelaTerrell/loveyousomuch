@@ -1223,10 +1223,10 @@
 }
 
 .loveEnvelope-yellow .loveEnvelope {
-  --envelope-main: #e4bd55;
-  --envelope-dark: #c59d3d;
-  --envelope-light: #f0d47e;
-  --envelope-seal: #7d5d18;
+  --envelope-main: #ffd429;
+  --envelope-dark: #e6b800;
+  --envelope-light: #ffe66f;
+  --envelope-seal: #9a7426;
 }
 
 .loveEnvelope-purple .loveEnvelope {

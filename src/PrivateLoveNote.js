@@ -120,14 +120,14 @@ const REVEAL_THEME_STYLES = {
     "--reveal-text": "#493b34",
     "--reveal-muted": "#85756c",
   },
-  yellow: {
-  "--reveal-accent": "#9a7426",
-  "--reveal-accent-dark": "#74571d",
-  "--reveal-soft": "#fff6d9",
-  "--reveal-page": "#fffdf6",
-  "--reveal-border": "#ead9a7",
-  "--reveal-text": "#4b4028",
-  "--reveal-muted": "#88795c",
+ yellow: {
+  "--reveal-accent": "#f2b705",
+  "--reveal-accent-dark": "#c98f00",
+  "--reveal-soft": "#fff3a6",
+  "--reveal-page": "#fffdee",
+  "--reveal-border": "#f0cf52",
+  "--reveal-text": "#49370f",
+  "--reveal-muted": "#7b6527",
 },
 
 purple: {
