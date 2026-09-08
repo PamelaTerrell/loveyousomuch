@@ -1,6 +1,5 @@
 .privateLovePage {
   min-height: 100vh;
-
   padding: clamp(2rem, 7vw, 5rem) 1rem;
 
   display: grid;
@@ -16,6 +15,10 @@
 
   color: #3e2c31;
 }
+
+/* =========================================================
+   Sender preview
+   ========================================================= */
 
 .senderPreviewActions {
   width: min(520px, 100%);
@@ -36,6 +39,10 @@
   width: auto;
   padding-inline: 1.25rem;
 }
+
+/* =========================================================
+   Main layout
+   ========================================================= */
 
 .privateComposer,
 .privateReveal {
@@ -100,6 +107,10 @@
   line-height: 1.75;
 }
 
+/* =========================================================
+   Private love form
+   ========================================================= */
+
 .privateLoveForm {
   width: min(650px, 100%);
   margin: 2.3rem auto 0;
@@ -161,6 +172,7 @@
 
 .privateFormField textarea {
   min-height: 165px;
+
   resize: vertical;
 }
 
@@ -183,6 +195,10 @@
 
   font-size: 0.72rem;
 }
+
+/* =========================================================
+   Privacy notice
+   ========================================================= */
 
 .privatePrivacyNotice {
   margin: 1.3rem 0;
@@ -214,6 +230,10 @@
   line-height: 1.6;
 }
 
+/* =========================================================
+   Buttons
+   ========================================================= */
+
 .privatePrimaryButton,
 .privateSecondaryButton {
   min-height: 44px;
@@ -229,6 +249,8 @@
   font-weight: 750;
 
   text-decoration: none;
+
+  cursor: pointer;
 }
 
 .privatePrimaryButton {
@@ -246,7 +268,15 @@
 
 .privatePrimaryButton:disabled {
   cursor: default;
+
   opacity: 0.55;
+}
+
+.privateSecondaryButton {
+  border: 1px solid #e4cbd1;
+
+  background: white;
+  color: #745e64;
 }
 
 .privatePreviewPrimary {
@@ -265,19 +295,13 @@
   color: #ad4f67;
 
   font-weight: 750;
+
   text-decoration: none;
 }
 
 .privatePreviewPrimary:hover {
   background: #fcebea;
   color: #85384d;
-}
-
-.privateSecondaryButton {
-  border: 1px solid #e4cbd1;
-
-  background: white;
-  color: #745e64;
 }
 
 .privateStatus {
@@ -287,6 +311,10 @@
 
   color: #85384d;
 }
+
+/* =========================================================
+   Created note / share card
+   ========================================================= */
 
 .privateLinkCard {
   width: min(650px, 100%);
@@ -339,31 +367,19 @@
   background: #fffaf8;
 }
 
-.privateShareActions {
-  display: flex;
-  gap: 0.45rem;
-}
+.privateShareLink span {
+  min-width: 0;
+  flex: 1;
 
-.privateShareActions button {
-  min-height: 38px;
-  padding: 0 0.8rem;
+  padding: 0 0.45rem;
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
+  overflow: hidden;
 
-  border: 0;
-  border-radius: 9px;
+  color: #745e64;
 
-  background: #ad4f67;
-  color: white;
-
-  font-weight: 750;
-}
-
-.privateShareActions button:hover {
-  background: #85384d;
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .privateShareActions {
@@ -372,7 +388,8 @@
   gap: 0.45rem;
 }
 
-.privateShareActions button {
+.privateShareActions button,
+.privateShareLink button {
   min-height: 40px;
   padding: 0 0.85rem;
 
@@ -396,8 +413,10 @@
     transform 160ms ease;
 }
 
-.privateShareActions button:hover {
+.privateShareActions button:hover,
+.privateShareLink button:hover {
   background: #85384d;
+
   transform: translateY(-1px);
 }
 
@@ -413,6 +432,28 @@
 
 .privateShareHint strong {
   color: #745e64;
+}
+
+.privatePreviewLink {
+  display: block;
+
+  margin-bottom: 1rem;
+
+  color: #ad4f67;
+
+  font-size: 0.85rem;
+  font-weight: 750;
+}
+
+.privateBackLink {
+  display: inline-block;
+
+  margin-top: 2rem;
+
+  color: #745e64;
+
+  font-size: 0.82rem;
+  text-decoration: none;
 }
 
 /* =========================================================
@@ -474,6 +515,11 @@
 
 .envelopeChoice:hover {
   transform: translateY(-2px);
+}
+
+.envelopeChoice:focus-visible {
+  outline: 3px solid rgba(173, 79, 103, 0.22);
+  outline-offset: 3px;
 }
 
 .envelopeChoiceActive {
@@ -567,7 +613,7 @@
 }
 
 /* =========================================================
-   Recipient theme
+   Recipient note theme
    ========================================================= */
 
 .privateNoteCard {
@@ -605,99 +651,9 @@
   --note-background: #faf6ec;
 }
 
-.privateNoteCard {
-  background:
-    linear-gradient(
-      145deg,
-      #ffffff,
-      var(--note-background)
-    );
-}
-
-.privateNoteCard .privateSparkle,
-.privateNoteCard .privateRecipient {
-  color: var(--note-accent);
-}
-
-@media (max-width: 600px) {
-  .privateEnvelopeChoices {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .privateShareActions {
-    width: 100%;
-  }
-
-  .privateShareActions button {
-    flex: 1 1 100%;
-  }
-}
-
-@media (max-width: 600px) {
-  .privateShareActions {
-    width: 100%;
-  }
-
-  .privateShareActions button {
-    flex: 1;
-  }
-}
-
-.privateShareLink span {
-  min-width: 0;
-  flex: 1;
-
-  padding: 0 0.45rem;
-
-  overflow: hidden;
-
-  color: #745e64;
-
-  font-size: 0.8rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.privateShareLink button {
-  min-height: 38px;
-  padding: 0 0.8rem;
-
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-
-  border: 0;
-  border-radius: 9px;
-
-  background: #ad4f67;
-  color: white;
-
-  font-weight: 750;
-}
-
-.privatePreviewLink {
-  display: block;
-
-  margin-bottom: 1rem;
-
-  color: #ad4f67;
-
-  font-size: 0.85rem;
-  font-weight: 750;
-}
-
-.privateBackLink {
-  display: inline-block;
-
-  margin-top: 2rem;
-
-  color: #745e64;
-
-  font-size: 0.82rem;
-  text-decoration: none;
-}
+/* =========================================================
+   Actual private note card
+   ========================================================= */
 
 .privateNoteCard {
   position: relative;
@@ -715,11 +671,16 @@
     linear-gradient(
       145deg,
       #ffffff,
-      #fff7f6
+      var(--note-background)
     );
 
   box-shadow:
     0 20px 60px rgba(111, 66, 78, 0.1);
+}
+
+.privateNoteCard .privateSparkle,
+.privateNoteCard .privateRecipient {
+  color: var(--note-accent);
 }
 
 .privateSparkle {
@@ -781,6 +742,10 @@
   font-size: 0.75rem;
 }
 
+/* =========================================================
+   Loading and error
+   ========================================================= */
+
 .privateLoading,
 .privateError {
   padding: 3rem 1rem;
@@ -809,29 +774,6 @@
   margin: 1rem auto 1.5rem;
 
   color: #745e64;
-}
-
-@media (max-width: 600px) {
-  .privateCharacterCounter {
-    flex-direction: column;
-    gap: 0.2rem;
-  }
-
-  .privateShareLink {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .privateShareLink span {
-    padding: 0.5rem;
-
-    white-space: normal;
-    word-break: break-all;
-  }
-
-  .privateShareLink button {
-    justify-content: center;
-  }
 }
 
 /* =========================================================
@@ -866,8 +808,6 @@
   color: var(--reveal-muted);
 }
 
-/* Actual private note */
-
 .privateLoveRevealPage .privateNoteCard {
   border-color: var(--reveal-border);
 
@@ -895,8 +835,6 @@
   color: var(--reveal-muted);
 }
 
-/* Sender preview */
-
 .privateLoveRevealPage .senderPreviewActions p {
   color: var(--reveal-muted);
 }
@@ -909,8 +847,6 @@
 .privateLoveRevealPage .senderReturnButton:hover {
   background: var(--reveal-accent-dark);
 }
-
-/* Recipient controls */
 
 .privateLoveRevealPage .privatePrivacyMessage {
   color: var(--reveal-muted);
@@ -930,4 +866,483 @@
 .privateLoveRevealPage .privateSecondaryButton:hover {
   background: var(--reveal-soft);
   color: var(--reveal-accent-dark);
+}
+
+/* =========================================================
+   TAP-TO-OPEN PRIVATE LOVE NOTE
+   ========================================================= */
+
+.privateEnvelopeReveal {
+  width: 100%;
+
+  text-align: center;
+}
+
+/* =========================================================
+   Envelope button
+   ========================================================= */
+
+.loveEnvelopeButton {
+  width: min(420px, 100%);
+  margin: 1.25rem auto 0;
+  padding: 1.25rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+
+  border: 0;
+
+  background: transparent;
+
+  color: var(--reveal-accent);
+
+  cursor: pointer;
+
+  font: inherit;
+}
+
+.loveEnvelopeButton:focus-visible {
+  outline: 3px solid var(--reveal-accent);
+  outline-offset: 6px;
+
+  border-radius: 24px;
+}
+
+/* =========================================================
+   Large reveal envelope
+   ========================================================= */
+
+.loveEnvelope {
+  --envelope-main: #f4cfd5;
+  --envelope-dark: #dca9b4;
+  --envelope-light: #f8dce1;
+  --envelope-seal: #ad4f67;
+
+  position: relative;
+
+  width: min(320px, 82vw);
+
+  aspect-ratio: 1.5 / 1;
+
+  display: block;
+
+  perspective: 900px;
+
+  transition:
+    transform 180ms ease;
+}
+
+/* Envelope rear */
+
+.loveEnvelopeBack {
+  position: absolute;
+  inset: 0;
+
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      145deg,
+      var(--envelope-light),
+      var(--envelope-main)
+    );
+
+  box-shadow:
+    0 22px 50px rgba(45, 30, 35, 0.14);
+}
+
+/* =========================================================
+   Letter tucked inside
+   ========================================================= */
+
+.loveEnvelopeLetter {
+  position: absolute;
+
+  z-index: 2;
+
+  left: 9%;
+  right: 9%;
+  bottom: 12%;
+
+  height: 72%;
+
+  padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+
+  border-radius: 10px 10px 5px 5px;
+
+  background: #fffdfa;
+
+  color: var(--envelope-seal);
+
+  box-shadow:
+    0 4px 18px rgba(45, 30, 35, 0.08);
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 1rem;
+
+  transform: translateY(24%);
+
+  transition:
+    transform 650ms cubic-bezier(
+      0.22,
+      1,
+      0.36,
+      1
+    );
+}
+
+/* =========================================================
+   Envelope front pocket
+   ========================================================= */
+
+.loveEnvelopeFront {
+  position: absolute;
+
+  z-index: 4;
+
+  inset: 0;
+
+  overflow: hidden;
+
+  border-radius: 14px;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      32deg,
+      transparent 49%,
+      var(--envelope-main) 50%
+    ),
+    linear-gradient(
+      -32deg,
+      transparent 49%,
+      var(--envelope-dark) 50%
+    );
+}
+
+.loveEnvelopeFront::before,
+.loveEnvelopeFront::after {
+  content: "";
+
+  position: absolute;
+
+  width: 72%;
+  height: 145%;
+
+  bottom: -72%;
+}
+
+.loveEnvelopeFront::before {
+  left: -21%;
+
+  transform: rotate(34deg);
+
+  background: var(--envelope-main);
+}
+
+.loveEnvelopeFront::after {
+  right: -21%;
+
+  transform: rotate(-34deg);
+
+  background: var(--envelope-dark);
+}
+
+/* =========================================================
+   Envelope flap
+   ========================================================= */
+
+.loveEnvelopeFlap {
+  position: absolute;
+
+  z-index: 6;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 58%;
+
+  transform-origin: top center;
+
+  clip-path:
+    polygon(
+      0 0,
+      100% 0,
+      50% 100%
+    );
+
+  background:
+    linear-gradient(
+      160deg,
+      var(--envelope-light),
+      var(--envelope-main)
+    );
+
+  transition:
+    transform 550ms cubic-bezier(
+      0.4,
+      0,
+      0.2,
+      1
+    );
+
+  backface-visibility: hidden;
+}
+
+/* =========================================================
+   Heart seal
+   ========================================================= */
+
+.loveEnvelopeSeal {
+  position: absolute;
+
+  z-index: 8;
+
+  top: 44%;
+  left: 50%;
+
+  width: 46px;
+  height: 46px;
+
+  display: grid;
+  place-items: center;
+
+  transform:
+    translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background: var(--envelope-seal);
+
+  color: #ffffff;
+
+  box-shadow:
+    0 7px 18px rgba(50, 30, 35, 0.18);
+
+  transition:
+    transform 220ms ease,
+    opacity 180ms ease;
+}
+
+/* =========================================================
+   Tap instruction
+   ========================================================= */
+
+.loveEnvelopeInstruction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+
+  color: var(--reveal-accent);
+
+  font-size: 0.84rem;
+  font-weight: 750;
+}
+
+/* =========================================================
+   Large reveal envelope themes
+   ========================================================= */
+
+.loveEnvelope-blush .loveEnvelope {
+  --envelope-main: #f4cfd5;
+  --envelope-dark: #ddaeb8;
+  --envelope-light: #f8dce1;
+  --envelope-seal: #ad4f67;
+}
+
+.loveEnvelope-red .loveEnvelope {
+  --envelope-main: #983f4d;
+  --envelope-dark: #75313c;
+  --envelope-light: #ad4a59;
+  --envelope-seal: #6d2933;
+}
+
+.loveEnvelope-navy .loveEnvelope {
+  --envelope-main: #314766;
+  --envelope-dark: #243650;
+  --envelope-light: #40597b;
+  --envelope-seal: #22344d;
+}
+
+.loveEnvelope-forest .loveEnvelope {
+  --envelope-main: #42624e;
+  --envelope-dark: #314b3b;
+  --envelope-light: #527561;
+  --envelope-seal: #304839;
+}
+
+.loveEnvelope-black .loveEnvelope {
+  --envelope-main: #292929;
+  --envelope-dark: #151515;
+  --envelope-light: #393939;
+  --envelope-seal: #111111;
+}
+
+.loveEnvelope-ivory .loveEnvelope {
+  --envelope-main: #ede4d2;
+  --envelope-dark: #d3c5ad;
+  --envelope-light: #f7f0e2;
+  --envelope-seal: #7d6659;
+}
+
+/* =========================================================
+   Envelope hover / press
+   ========================================================= */
+
+@media (hover: hover) and (pointer: fine) {
+  .loveEnvelopeButton:hover .loveEnvelope {
+    transform: translateY(-4px);
+  }
+
+  .loveEnvelopeButton:hover .loveEnvelopeSeal {
+    transform:
+      translate(-50%, -50%)
+      scale(1.08);
+  }
+}
+
+.loveEnvelopeButton:active .loveEnvelope {
+  transform: translateY(1px);
+}
+
+/* =========================================================
+   Opened note animation
+   ========================================================= */
+
+.openedLoveNote {
+  animation:
+    loveNoteReveal 500ms ease both;
+}
+
+.privateNoteCardOpened {
+  animation:
+    loveNoteRise 600ms
+    cubic-bezier(
+      0.22,
+      1,
+      0.36,
+      1
+    )
+    both;
+}
+
+@keyframes loveNoteReveal {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes loveNoteRise {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(22px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+}
+
+/* =========================================================
+   Closed sender preview
+   ========================================================= */
+
+.senderPreviewClosed {
+  margin-top: 0.5rem;
+}
+
+/* =========================================================
+   Reduced motion
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .loveEnvelope,
+  .loveEnvelopeLetter,
+  .loveEnvelopeFlap,
+  .loveEnvelopeSeal,
+  .openedLoveNote,
+  .privateNoteCardOpened {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .privateEnvelopeChoices {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .privateCharacterCounter {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .privateShareLink {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .privateShareLink span {
+    padding: 0.5rem;
+
+    white-space: normal;
+
+    word-break: break-all;
+  }
+
+  .privateShareActions {
+    width: 100%;
+  }
+
+  .privateShareActions button,
+  .privateShareLink button {
+    flex: 1 1 100%;
+
+    justify-content: center;
+  }
+
+  .loveEnvelopeButton {
+    padding-inline: 0;
+  }
+
+  .loveEnvelope {
+    width: min(
+      285px,
+      82vw
+    );
+  }
+
+  .loveEnvelopeSeal {
+    width: 42px;
+    height: 42px;
+  }
 }
