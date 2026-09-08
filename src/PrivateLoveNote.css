@@ -612,6 +612,18 @@
   --seal-color: #7d6659;
 }
 
+.envelope-yellow {
+  --envelope-color: #e4bd55;
+  --envelope-flap: #f0d47e;
+  --seal-color: #7d5d18;
+}
+
+.envelope-purple {
+  --envelope-color: #72517f;
+  --envelope-flap: #8a6697;
+  --seal-color: #f3eaf6;
+}
+
 /* =========================================================
    Recipient note theme
    ========================================================= */
@@ -649,6 +661,16 @@
 .privateNoteCard.theme-ivory {
   --note-accent: #7d6659;
   --note-background: #faf6ec;
+}
+
+.privateNoteCard.theme-yellow {
+  --note-accent: #9a7426;
+  --note-background: #fff9e5;
+}
+
+.privateNoteCard.theme-purple {
+  --note-accent: #72517f;
+  --note-background: #f7f1f9;
 }
 
 /* =========================================================
@@ -1198,6 +1220,20 @@
   --envelope-dark: #d3c5ad;
   --envelope-light: #f7f0e2;
   --envelope-seal: #7d6659;
+}
+
+.loveEnvelope-yellow .loveEnvelope {
+  --envelope-main: #e4bd55;
+  --envelope-dark: #c59d3d;
+  --envelope-light: #f0d47e;
+  --envelope-seal: #7d5d18;
+}
+
+.loveEnvelope-purple .loveEnvelope {
+  --envelope-main: #72517f;
+  --envelope-dark: #573d61;
+  --envelope-light: #8a6697;
+  --envelope-seal: #4d3656;
 }
 
 /* =========================================================

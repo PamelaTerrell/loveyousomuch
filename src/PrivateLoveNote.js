@@ -45,6 +45,14 @@ const ENVELOPE_THEMES = [
     value: "ivory",
     label: "Ivory",
   },
+  {
+  value: "yellow",
+  label: "Yellow",
+},
+{
+  value: "purple",
+  label: "Purple",
+},
 ];
 
 const VALID_ENVELOPE_THEMES =
@@ -112,6 +120,25 @@ const REVEAL_THEME_STYLES = {
     "--reveal-text": "#493b34",
     "--reveal-muted": "#85756c",
   },
+  yellow: {
+  "--reveal-accent": "#9a7426",
+  "--reveal-accent-dark": "#74571d",
+  "--reveal-soft": "#fff6d9",
+  "--reveal-page": "#fffdf6",
+  "--reveal-border": "#ead9a7",
+  "--reveal-text": "#4b4028",
+  "--reveal-muted": "#88795c",
+},
+
+purple: {
+  "--reveal-accent": "#72517f",
+  "--reveal-accent-dark": "#573d61",
+  "--reveal-soft": "#f3ebf6",
+  "--reveal-page": "#fbf8fc",
+  "--reveal-border": "#ddcce4",
+  "--reveal-text": "#403245",
+  "--reveal-muted": "#7a6a7e",
+},
 };
 
 const getSafeTheme = (value) =>

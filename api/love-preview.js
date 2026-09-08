@@ -5,6 +5,8 @@ const allowedThemes = new Set([
   "forest",
   "black",
   "ivory",
+  "yellow",
+  "purple",
 ]);
 
 export default function handler(req, res) {
