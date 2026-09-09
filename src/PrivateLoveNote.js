@@ -972,12 +972,21 @@ function PrivateLoveNote() {
                           Community Wall.
                         </p>
 
-                        <a
-                          className="privateSecondaryButton"
-                          href="/private"
-                        >
-                          Write one for someone you love
-                        </a>
+                        <div className="privateRevealActions">
+  <a
+    className="privateSecondaryButton"
+    href="/private"
+  >
+    Write one for someone you love
+  </a>
+
+  <a
+    className="privateHomeLink"
+    href="/"
+  >
+    Return to the home page
+  </a>
+</div>
                       </>
                     )}
                   </div>
