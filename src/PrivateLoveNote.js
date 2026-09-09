@@ -12,6 +12,7 @@ import {
 import { supabase } from "./lib/supabase";
 import "./PrivateLoveNote.css";
 import { SmsComposer } from "@capawesome/capacitor-sms-composer";
+import { Capacitor } from "@capacitor/core";
 
 const MAX_MESSAGE_LENGTH = 500;
 
@@ -671,7 +672,9 @@ function PrivateLoveNote() {
   /*
    * Open phone SMS composer
    */
-const textPrivateNote = async () => {
+
+
+  const textPrivateNote = async () => {
   if (!createdShareLink) {
     return;
   }
@@ -681,24 +684,49 @@ const textPrivateNote = async () => {
     `Open your surprise here:\n${createdShareLink}`;
 
   try {
-    const { canCompose } =
-      await SmsComposer.canComposeSms();
+    if (Capacitor.isNativePlatform()) {
+      const { canCompose } =
+        await SmsComposer.canComposeSms();
 
-    if (!canCompose) {
-      console.error(
-        "This device cannot compose SMS messages."
-      );
+      if (!canCompose) {
+        console.error(
+          "This device cannot compose SMS messages."
+        );
+        return;
+      }
+
+      await SmsComposer.composeSms({
+        body: textMessage,
+      });
+
       return;
     }
 
-    await SmsComposer.composeSms({
-      body: textMessage,
-    });
-  } catch (error) {
-    console.error(
-      "Unable to open the SMS composer:",
-      error
+    if (navigator.share) {
+      await navigator.share({
+        title: "A private love note for you",
+        text: textMessage,
+      });
+
+      return;
+    }
+
+    await navigator.clipboard.writeText(
+      textMessage
     );
+
+    setCopied(true);
+
+    window.setTimeout(() => {
+      setCopied(false);
+    }, 2500);
+  } catch (error) {
+    if (error?.name !== "AbortError") {
+      console.error(
+        "Unable to share private love note:",
+        error
+      );
+    }
   }
 };
  
