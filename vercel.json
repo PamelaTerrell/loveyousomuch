@@ -9,6 +9,14 @@
       "destination": "/"
     },
     {
+      "source": "/support",
+      "destination": "/"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/"
+    },
+    {
       "source": "/love/:path*",
       "destination": "/"
     },

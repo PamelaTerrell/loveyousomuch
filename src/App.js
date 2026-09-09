@@ -1272,36 +1272,53 @@ function App() {
         </div>
       )}
 
-      <footer className="siteFooter">
-        <Heart size={14} fill="currentColor" />
+     <footer className="siteFooter">
+  <Heart size={14} fill="currentColor" />
 
-        <div className="footerText">
-          <p>
-            I Love You So Much is a digital project from{" "}
-            <a
-              href="https://www.stabileusa.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Stabile USA
-            </a>{" "}
-            — independent ideas built around human connection.
-          </p>
+  <div className="footerText">
+    <p>
+      I Love You So Much is a digital project from{" "}
+      <a
+        href="https://www.stabileusa.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Stabile USA
+      </a>{" "}
+      — independent ideas built around human connection.
+    </p>
 
-          <p>
-            Created by{" "}
-            <a
-              href="https://pamelajterrell.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Pamela Terrell
-            </a>.
-          </p>
-        </div>
+    <p>
+      Created by{" "}
+      <a
+        href="https://pamelajterrell.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Pamela Terrell
+      </a>.
+    </p>
 
-        <Heart size={14} fill="currentColor" />
-      </footer>
+    <nav
+      className="footerLinks"
+      aria-label="Support and privacy"
+    >
+      <a href="/support">
+        Support
+      </a>
+
+      <span aria-hidden="true">
+        ·
+      </span>
+
+      <a href="/privacy">
+        Privacy
+      </a>
+    </nav>
+  </div>
+
+  <Heart size={14} fill="currentColor" />
+</footer>
 
       <Analytics />
     </div>

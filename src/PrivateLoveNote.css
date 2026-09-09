@@ -1,9 +1,18 @@
 .privateLovePage {
   min-height: 100vh;
-  padding: clamp(2rem, 7vw, 5rem) 1rem;
+  min-height: 100dvh;
 
-  display: grid;
-  place-items: center;
+  padding:
+    clamp(2rem, 7vw, 5rem)
+    1rem
+    calc(3rem + env(safe-area-inset-bottom));
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  overflow-x: hidden;
 
   background:
     radial-gradient(
