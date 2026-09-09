@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { supabase } from "./lib/supabase";
 import "./PrivateLoveNote.css";
+import { SmsComposer } from "@capawesome/capacitor-sms-composer";
 
 const MAX_MESSAGE_LENGTH = 500;
 
@@ -670,33 +671,39 @@ function PrivateLoveNote() {
   /*
    * Open phone SMS composer
    */
-  const textPrivateNote = () => {
-    if (!createdShareLink) {
+const textPrivateNote = async () => {
+  if (!createdShareLink) {
+    return;
+  }
+
+  const textMessage =
+    `💗 Someone made you a private love note\n\n` +
+    `Open your surprise here:\n${createdShareLink}`;
+
+  try {
+    const { canCompose } =
+      await SmsComposer.canComposeSms();
+
+    if (!canCompose) {
+      console.error(
+        "This device cannot compose SMS messages."
+      );
       return;
     }
 
-    const textMessage =
-      `💗 Someone made you a private love note\n\n` +
-      `Open your surprise here:\n${createdShareLink}`;
+    await SmsComposer.composeSms({
+      body: textMessage,
+    });
+  } catch (error) {
+    console.error(
+      "Unable to open the SMS composer:",
+      error
+    );
+  }
+};
+ 
 
-    const encodedMessage =
-      encodeURIComponent(
-        textMessage
-      );
-
-    const isAppleDevice =
-      /iPad|iPhone|iPod/.test(
-        navigator.userAgent
-      );
-
-    const separator =
-      isAppleDevice
-        ? "&"
-        : "?";
-
-    window.location.href =
-      `sms:${separator}body=${encodedMessage}`;
-  };
+   
 
   /*
    * Open recipient note.

@@ -7,6 +7,7 @@
     "@capacitor/core": "^8.5.1",
     "@capacitor/ios": "^8.5.1",
     "@capacitor/splash-screen": "^8.0.2",
+    "@capawesome/capacitor-sms-composer": "^0.1.2",
     "@supabase/supabase-js": "^2.115.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.7.0",
