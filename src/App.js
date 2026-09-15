@@ -201,9 +201,7 @@ function App() {
       }));
 
       setNotes(
-        approvedNotes.length > 0
-          ? approvedNotes
-          : starterNotes
+        approvedNotes.length > 0 ? approvedNotes : starterNotes
       );
 
       try {
@@ -212,12 +210,9 @@ function App() {
         const {
           data: existingHearts,
           error: existingHeartsError,
-        } = await supabase.rpc(
-          "get_hearted_message_ids",
-          {
-            p_browser_id: browserId,
-          }
-        );
+        } = await supabase.rpc("get_hearted_message_ids", {
+          p_browser_id: browserId,
+        });
 
         if (existingHeartsError) {
           console.error(
@@ -237,12 +232,9 @@ function App() {
         const {
           data: existingReports,
           error: existingReportsError,
-        } = await supabase.rpc(
-          "get_reported_message_ids",
-          {
-            p_browser_id: browserId,
-          }
-        );
+        } = await supabase.rpc("get_reported_message_ids", {
+          p_browser_id: browserId,
+        });
 
         if (existingReportsError) {
           console.error(
@@ -595,29 +587,34 @@ function App() {
         <p className="heroIntroduction">
           So this is a place for the rest of it — the
           gratitude, tenderness, longing, laughter, devotion,
-          memories, and tiny everyday things that make someone
-          impossible to forget.
+          memories, and tiny everyday things that make
+          someone impossible to forget.
         </p>
 
-        <a
-          className="primaryAction"
-          href="#leave-a-note"
-        >
-          Leave a little love
-          <Heart size={16} fill="currentColor" />
-        </a>
+        <div className="heroActions">
+          <a
+            className="primaryAction"
+            href="#leave-a-note"
+          >
+            Leave a little love
+            <Heart size={16} fill="currentColor" />
+          </a>
 
-        <a
-  className="secondaryAction"
-  href="/private"
->
-  <LockKeyhole size={16} />
-  Send a private note
-</a>
+          <a
+            className="secondaryAction"
+            href="/private"
+          >
+            <LockKeyhole size={16} />
+            Send a private note
+          </a>
+        </div>
       </header>
 
       <main>
-        <section className="communitySummary">
+        <section
+          className="communitySummary"
+          aria-label="Community love wall summary"
+        >
           <div className="summaryItem">
             <strong>{notes.length}</strong>
             <span>love notes</span>
@@ -938,7 +935,11 @@ function App() {
                 The Community Wall
               </h2>
 
-              <p>
+              <p className="wallTagline">
+                Love lives here.
+              </p>
+
+              <p className="wallIntroduction">
                 Tiny reminders that love is happening
                 everywhere, even on ordinary days.
               </p>
@@ -947,6 +948,7 @@ function App() {
             <Heart
               size={27}
               fill="currentColor"
+              aria-hidden="true"
             />
           </div>
 
@@ -965,6 +967,9 @@ function App() {
                 }
                 onClick={() =>
                   setActiveCategory(item)
+                }
+                aria-pressed={
+                  activeCategory === item
                 }
               >
                 {item}
@@ -1018,6 +1023,7 @@ function App() {
                         size={16}
                         className="noteDecoration"
                         fill="currentColor"
+                        aria-hidden="true"
                       />
                     </div>
 
@@ -1164,8 +1170,8 @@ function App() {
 
             <p className="reportIntroduction">
               If a note contains harassment, spam, private
-              information, or something inappropriate, you can
-              send it back for review.
+              information, or something inappropriate, you
+              can send it back for review.
             </p>
 
             <div className="reportedNotePreview">
@@ -1272,53 +1278,55 @@ function App() {
         </div>
       )}
 
-     <footer className="siteFooter">
-  <Heart size={14} fill="currentColor" />
+      <footer className="siteFooter">
+        <Heart size={14} fill="currentColor" />
 
-  <div className="footerText">
-    <p>
-      I Love You So Much is a digital project from{" "}
-      <a
-        href="https://www.stabileusa.com"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Stabile USA
-      </a>{" "}
-      — independent ideas built around human connection.
-    </p>
+        <div className="footerText">
+          <p>
+            I Love You So Much is a digital project from{" "}
+            <a
+              href="https://www.stabileusa.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Stabile USA
+            </a>{" "}
+            — independent ideas built around human
+            connection.
+          </p>
 
-    <p>
-      Created by{" "}
-      <a
-        href="https://pamelajterrell.com"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Pamela Terrell
-      </a>.
-    </p>
+          <p>
+            Created by{" "}
+            <a
+              href="https://pamelajterrell.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Pamela Terrell
+            </a>
+            .
+          </p>
 
-    <nav
-      className="footerLinks"
-      aria-label="Support and privacy"
-    >
-      <a href="/support">
-        Support
-      </a>
+          <nav
+            className="footerLinks"
+            aria-label="Support and privacy"
+          >
+            <a href="/support">
+              Support
+            </a>
 
-      <span aria-hidden="true">
-        ·
-      </span>
+            <span aria-hidden="true">
+              ·
+            </span>
 
-      <a href="/privacy">
-        Privacy
-      </a>
-    </nav>
-  </div>
+            <a href="/privacy">
+              Privacy
+            </a>
+          </nav>
+        </div>
 
-  <Heart size={14} fill="currentColor" />
-</footer>
+        <Heart size={14} fill="currentColor" />
+      </footer>
 
       <Analytics />
     </div>
