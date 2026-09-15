@@ -120,6 +120,9 @@ const getBrowserId = () => {
   }
 };
 
+const APP_STORE_URL =
+  "https://apps.apple.com/us/app/i-love-you-so-much/id6810764631";
+
 function App() {
   const [notes, setNotes] = useState(starterNotes);
 
@@ -609,6 +612,41 @@ function App() {
           </a>
         </div>
       </header>
+
+      <div className="appStoreLaunchCard">
+  <div className="appStoreLaunchCopy">
+    <p className="appStoreEyebrow">
+      <Sparkles size={15} />
+      Now available on the App Store
+    </p>
+
+    <h2>
+      Take a little love with you.
+    </h2>
+
+    <p>
+      I Love You So Much is now available for iPhone.
+      Create a private love note, choose an envelope,
+      and send someone a little moment made just for them.
+    </p>
+  </div>
+
+  <a
+    className="appStoreButton"
+    href={APP_STORE_URL}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Download I Love You So Much on the App Store"
+  >
+    <span className="appStoreButtonSmall">
+      Download on the
+    </span>
+
+    <span className="appStoreButtonLarge">
+      App Store
+    </span>
+  </a>
+</div>
 
       <main>
         <section

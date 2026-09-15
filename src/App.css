@@ -1495,6 +1495,151 @@ svg {
   margin-top: 1rem;
 }
 
+/* -------------------------------------------------------------------------- */
+/* APP STORE LAUNCH                                                          */
+/* -------------------------------------------------------------------------- */
+
+.appStoreLaunchCard {
+  width: min(100%, 760px);
+  margin: 2rem auto 0;
+  padding: 1.4rem 1.5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+
+  border: 1px solid rgba(184, 79, 107, 0.2);
+  border-radius: 24px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 248, 249, 0.96),
+      rgba(255, 237, 242, 0.9)
+    );
+
+  box-shadow:
+    0 16px 40px rgba(106, 52, 68, 0.08);
+}
+
+.appStoreLaunchCopy {
+  flex: 1;
+  min-width: 0;
+}
+
+.appStoreEyebrow {
+  margin: 0 0 0.45rem;
+
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+
+  color: #a14460;
+
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.appStoreLaunchCopy h2 {
+  margin: 0;
+
+  color: #4a2933;
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.35rem, 3vw, 1.8rem);
+  line-height: 1.2;
+}
+
+.appStoreLaunchCopy > p:last-child {
+  max-width: 520px;
+  margin: 0.65rem 0 0;
+
+  color: #735c64;
+
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+
+.appStoreButton {
+  min-width: 166px;
+  padding: 0.72rem 1.2rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  background: #171214;
+  color: #ffffff;
+
+  text-decoration: none;
+
+  box-shadow:
+    0 8px 20px rgba(39, 25, 30, 0.16);
+
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease;
+}
+
+.appStoreButton:hover {
+  transform: translateY(-2px);
+
+  background: #2b2225;
+
+  box-shadow:
+    0 12px 24px rgba(39, 25, 30, 0.2);
+}
+
+.appStoreButton:focus-visible {
+  outline: 3px solid rgba(184, 79, 107, 0.35);
+  outline-offset: 4px;
+}
+
+.appStoreButtonSmall {
+  font-size: 0.66rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.appStoreButtonLarge {
+  margin-top: 0.2rem;
+
+  font-size: 1.16rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+@media (max-width: 640px) {
+  .appStoreLaunchCard {
+    padding: 1.25rem;
+
+    flex-direction: column;
+    align-items: stretch;
+
+    text-align: center;
+  }
+
+  .appStoreEyebrow {
+    justify-content: center;
+  }
+
+  .appStoreLaunchCopy > p:last-child {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .appStoreButton {
+    width: 100%;
+  }
+}
+
 /* =========================================================
    Footer
    ========================================================= */
