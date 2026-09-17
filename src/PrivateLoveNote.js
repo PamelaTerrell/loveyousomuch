@@ -744,16 +744,8 @@ function PrivateLoveNote() {
    * Return from sender preview.
    */
   const returnToSendPage = () => {
-    if (
-      window.history.length > 1
-    ) {
-      window.history.back();
-      return;
-    }
-
-    window.location.href =
-      "/private";
-  };
+  window.location.href = "/private";
+};
 
   /*
    * Explicitly begin a fresh note.
