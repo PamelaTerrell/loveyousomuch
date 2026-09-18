@@ -344,6 +344,49 @@
 }
 
 /* =========================================================
+   Composer + preview actions
+   ========================================================= */
+
+.privateComposerActions,
+.privatePreviewActionRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.privateComposerActions {
+  margin-top: 1.25rem;
+}
+
+.privatePreviewActionRow {
+  margin-top: 1rem;
+}
+
+.privateComposerActions .privatePrimaryButton,
+.privateComposerActions .privateSecondaryButton,
+.privatePreviewActionRow .privatePrimaryButton,
+.privatePreviewActionRow .privateSecondaryButton {
+  width: auto;
+  margin: 0;
+  padding-inline: 1.25rem;
+}
+
+.privateComposerActions .privatePrimaryButton {
+  flex: 1 1 220px;
+}
+
+.privateComposerActions .privateSecondaryButton {
+  flex: 1 1 180px;
+}
+
+.privatePreviewActionRow .privatePrimaryButton,
+.privatePreviewActionRow .privateSecondaryButton {
+  flex: 1 1 200px;
+}
+
+/* =========================================================
    Created note / share card
    ========================================================= */
 
@@ -1371,6 +1414,19 @@
   .privateCharacterCounter {
     flex-direction: column;
     gap: 0.2rem;
+  }
+
+    .privateComposerActions,
+  .privatePreviewActionRow {
+    flex-direction: column;
+  }
+
+  .privateComposerActions .privatePrimaryButton,
+  .privateComposerActions .privateSecondaryButton,
+  .privatePreviewActionRow .privatePrimaryButton,
+  .privatePreviewActionRow .privateSecondaryButton {
+    width: 100%;
+    flex: none;
   }
 
   .privateShareLink {
